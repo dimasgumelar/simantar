@@ -34,7 +34,7 @@ export default function Dashboard({ maintenance, task }) {
                             <div className="stats shadow">
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Menunggu</div>
-                                    <div className="stat-value text-error">
+                                    <div className="stat-value text-primary">
                                         {maintenance.pending}
                                     </div>
                                 </div>
@@ -50,8 +50,22 @@ export default function Dashboard({ maintenance, task }) {
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Selesai</div>
-                                    <div className="stat-value text-success">
+                                    <div className="stat-value text-info">
                                         {maintenance.completed}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Ditolak</div>
+                                    <div className="stat-value text-error">
+                                        {maintenance.rejected}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Disetujui</div>
+                                    <div className="stat-value text-success">
+                                        {maintenance.approved}
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +81,7 @@ export default function Dashboard({ maintenance, task }) {
                             <div className="stats shadow">
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Menunggu</div>
-                                    <div className="stat-value text-error">
+                                    <div className="stat-value text-primary">
                                         {task.pending}
                                     </div>
                                 </div>
@@ -83,8 +97,22 @@ export default function Dashboard({ maintenance, task }) {
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Selesai</div>
-                                    <div className="stat-value text-success">
+                                    <div className="stat-value text-info">
                                         {task.completed}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Ditolak</div>
+                                    <div className="stat-value text-error">
+                                        {task.rejected}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Disetujui</div>
+                                    <div className="stat-value text-success">
+                                        {task.approved}
                                     </div>
                                 </div>
                             </div>

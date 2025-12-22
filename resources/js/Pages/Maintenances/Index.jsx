@@ -182,7 +182,7 @@ export default function MaintenancesIndex({ maintenances }) {
                                                 <td>
                                                     <BadgeStatus
                                                         param={
-                                                            maintenance.status
+                                                            maintenance.latest_status
                                                         }
                                                     />
                                                 </td>

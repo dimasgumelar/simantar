@@ -69,6 +69,8 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi'])->group(function () {
     // Route::get('/maintenances/{maintenance}/edit', [MaintenanceController::class, 'edit'])->name('maintenances.edit');
     Route::post('/maintenances/{maintenance}', [MaintenanceController::class, 'update'])->name('maintenances.update');
     Route::post('/maintenances/{maintenance}/delete', [MaintenanceController::class, 'destroy'])->name('maintenances.destroy');
+    Route::post('/maintenances/{maintenance}/approve', [MaintenanceController::class, 'approve'])->name('maintenances.approve');
+    Route::post('/maintenances/{maintenance}/reject', [MaintenanceController::class, 'reject'])->name('maintenances.reject');
 });
 
 Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(function () {

@@ -54,9 +54,7 @@ class FeedbackController extends Controller
             $userId = Auth::user()->id;
         }
 
-        // dd($userId);
         $maintenances = $this->maintenanceService->getAll($search, $perPage, $sortField, $sortDirection, $userId);
-        // dd($maintenances);
 
         return Inertia::render('Tasks/Index', compact('maintenances'));
     }
@@ -170,12 +168,22 @@ class FeedbackController extends Controller
             return redirect()->route('tasks.index')->with('error', 'Data pemeliharaan tidak ditemukan.');
         }
 
+        $maintenance->load([
+            'status_histories.user',
+            'transmission',
+            'inventory',
+            'user',
+            'created_by_user',
+            'feedbacks',
+        ]);
+
         return Inertia::render('Tasks/Form', [
             'maintenance' => $maintenance,
             'transmission' => $maintenance->transmission,
             'created_by_user' => $maintenance->created_by_user,
             'inventory' => $maintenance->inventory,
             'feedbacks' => $maintenance->feedbacks,
+            'status_histories' => $maintenance->status_histories,
         ]);
     }
 
@@ -213,11 +221,14 @@ class FeedbackController extends Controller
      */
     public function start(Maintenance $maintenance)
     {
-        if ($maintenance->status != 0) {
+        if ($maintenance->latest_status->status != 0) {
             return redirect()->back()->with('error', 'Gagal memulai tugas.');
         }
-
-        $this->maintenanceService->start($maintenance);
+        
+        $data = $this->maintenanceService->start($maintenance, Auth::user()->id);
+        if (!$data) {
+            return redirect()->back()->with('error', 'Gagal memulai tugas.');
+        }
         return redirect()->route('tasks.index')->with('success', 'Berhasil memulai tugas.');
     }
 
@@ -254,11 +265,14 @@ class FeedbackController extends Controller
             return redirect()->back()->with('error', 'Unggah dokumen tugas terlebih dahulu.');
         }
 
-        if ($maintenance->status != 1) {
+        if ($maintenance->latest_status->status != 1 && $maintenance->latest_status->status != 3) {
             return redirect()->back()->with('error', 'Gagal menyelesaikan tugas.');
         }
-
-        $this->maintenanceService->complete($maintenance, $data);
+        
+        $result = $this->maintenanceService->complete($maintenance, $data, Auth::user()->id);
+        if (!$result) {
+            return redirect()->back()->with('error', 'Gagal menyelesaikan tugas.');
+        }
         return redirect()->route('tasks.index')->with('success', 'Berhasil menyelesaikan tugas.');
     }
 }

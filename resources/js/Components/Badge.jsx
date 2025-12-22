@@ -9,7 +9,7 @@ import { BADGE_LIST } from "@/utils/constants";
 export function BadgeStatus({ param = "" }) {
     return (
         <span
-            className={`badge badge-outline truncate block ${parseStatusClass(
+            className={`badge badge-outline truncate block w-[140px] text-center ${parseStatusClass(
                 param
             )}`}
         >
