@@ -200,17 +200,15 @@ export default function FilesIndex({ files }) {
                                                                 )
                                                             }
                                                         />
-                                                        <DownloadButton
-                                                            key={file.id}
-                                                            onClick={() =>
-                                                                handleDownload(
-                                                                    file
-                                                                )
-                                                            }
-                                                            className="btn-sm"
-                                                        />
                                                     </>
                                                 )}
+                                                <DownloadButton
+                                                    key={file.id}
+                                                    onClick={() =>
+                                                        handleDownload(file)
+                                                    }
+                                                    className="btn-sm"
+                                                />
                                             </td>
                                         </tr>
                                     ))

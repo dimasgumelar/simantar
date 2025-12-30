@@ -8,7 +8,6 @@ import {
     Input,
     InputButton,
     InputDropdownManual,
-    InputImage,
     InputFile,
 } from "@/Components/FormInput";
 import { FileModal } from "@/Components/Modal";
