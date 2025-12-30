@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_master_peralatan_maintenance', function (Blueprint $table) {
+        Schema::create('m_peralatan_maintenances', function (Blueprint $table) {
             $table->id();
             $table->string('nama_peralatan');
         });
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_master_peralatan_maintenance');
+        Schema::dropIfExists('m_peralatan_maintenances');
     }
 };

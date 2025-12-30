@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tb_maintenance_peralatan', function (Blueprint $table) {
+        Schema::create('maintenance_peralatans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transmission_id')->constrained()->onDelete('cascade');
-            $table->foreignId('peralatan_id')->constrained()->onDelete('cascade');
+            $table->foreignId('inventory_id')->constrained()->onDelete('cascade');
             $table->text('result');
             $table->timestamps();
             $table->softDeletes();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tb_maintenance_peralatan');
+        Schema::dropIfExists('maintenance_peralatans');
     }
 };
