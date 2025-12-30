@@ -57,6 +57,12 @@ export default function AuthenticatedLayout({ children }) {
             routeStr: "tasks.index",
             roles: ["admin", "ketua tim", "teknisi", "operator"],
         },
+        {
+            label: "Pemeliharaan Transmisi",
+            icon: <FaTasks />,
+            routeStr: "transmissionmaintenance.index",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        }
     ];
     const userRoleNames =
         userFromUsePage?.roles?.map((role) => role.name) ?? [];

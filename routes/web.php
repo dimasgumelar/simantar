@@ -9,6 +9,10 @@ use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
 use App\Http\Controllers\WebController;
+use App\Http\Controllers\MaintenancePeralatanController;
+use App\Models\MaintenancePeralatan;
+use App\Models\MasterDetailPeralatanMaintenance;
+use App\Models\MasterPeralatanMaintenance;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::get('/users/export', [UserController::class, 'export'])->name('users.export');
     Route::get('/transmissions/export', [TransmissionController::class, 'export'])->name('transmissions.export');
     Route::get('/inventories/export', [InventoryController::class, 'export'])->name('inventories.export');
@@ -42,12 +46,12 @@ Route::middleware(['auth', 'role:admin|ketua tim'])->group(function () {
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::post('/users/{user}/delete', [UserController::class, 'destroy'])->name('users.destroy');
-    
+
     Route::get('/users/{user}/transmissions', [UserTransmissionController::class, 'userTransmissions'])->name('users.transmissions');
     Route::get('/users/{user}/transmissions/create', [UserTransmissionController::class, 'userTransmissionsCreate'])->name('users.transmissions.create');
     Route::post('/users/{user}/transmissions', [UserTransmissionController::class, 'store'])->name('users.transmissions.store');
     Route::post('/users/{user}/transmissions/{id}/delete', [UserTransmissionController::class, 'destroy'])->name('users.transmissions.destroy');
-    
+
     Route::get('/transmissions/create', [TransmissionController::class, 'create'])->name('transmissions.create');
     Route::post('/transmissions', [TransmissionController::class, 'store'])->name('transmissions.store');
     Route::get('/transmissions/{transmission}/edit', [TransmissionController::class, 'edit'])->name('transmissions.edit');
@@ -61,7 +65,7 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi'])->group(function () {
     Route::get('/inventories/{inventory}/edit', [InventoryController::class, 'edit'])->name('inventories.edit');
     Route::post('/inventories/{inventory}', [InventoryController::class, 'update'])->name('inventories.update');
     Route::post('/inventories/{inventory}/delete', [InventoryController::class, 'destroy'])->name('inventories.destroy');
-    
+
     Route::get('/maintenances', [MaintenanceController::class, 'index'])->name('maintenances.index');
     Route::get('/maintenances/create', [MaintenanceController::class, 'create'])->name('maintenances.create');
     Route::post('/maintenances', [MaintenanceController::class, 'store'])->name('maintenances.store');
@@ -84,6 +88,10 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(func
     Route::post('/tasks/{maintenance}/start', [FeedbackController::class, 'start'])->name('tasks.start');
     Route::get('/tasks/{maintenance}/view', [FeedbackController::class, 'show'])->name('tasks.view');
     Route::post('/tasks/{maintenance}/complete', [FeedbackController::class, 'complete'])->name('tasks.complete');
+
+    //Maintenance Harian
+    Route::get('/transmissionmaintenance', [MaintenancePeralatanController::class, 'index'])->name('transmissionmaintenance.index');
+    //Route::get('/dailymaintenance/{daily}/view', [MaintenancePeralatanController::class, 'show'])->name('daily.view');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -95,4 +103,4 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

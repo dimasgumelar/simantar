@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Maintenance;
+use App\Services\InventoryService;
+use App\Services\TransmissionService;
+use App\Services\MaintenanceService;
+use App\Services\UserService;
+use App\Services\UserTransmissionService;
 use Illuminate\Http\Request;
-use App\Models\MaintenancePeralatan;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use App\Services\ExportService;
 
 class MaintenancePeralatanController extends Controller
 {
@@ -12,7 +20,15 @@ class MaintenancePeralatanController extends Controller
      */
     public function index()
     {
-        //
+        $userId = null;
+        if (!Auth::user()->hasAnyRole(['admin', 'ketua tim'])) {
+            $userId = Auth::user()->id;
+        }
+
+        //$maintenances = $this->maintenanceService->getAll($search, $perPage, $sortField, $sortDirection, null, $userId);
+        $notif = "haloo";
+
+        return Inertia::render('TransmissionMaintenances/Index', compact('notif'));
     }
 
     /**
