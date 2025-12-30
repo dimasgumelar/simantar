@@ -5,6 +5,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
@@ -71,6 +72,14 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi'])->group(function () {
     Route::post('/maintenances/{maintenance}/delete', [MaintenanceController::class, 'destroy'])->name('maintenances.destroy');
     Route::post('/maintenances/{maintenance}/approve', [MaintenanceController::class, 'approve'])->name('maintenances.approve');
     Route::post('/maintenances/{maintenance}/reject', [MaintenanceController::class, 'reject'])->name('maintenances.reject');
+
+    Route::get('/files', [FileController::class, 'index'])->name('files.index');
+    Route::get('/files/create', [FileController::class, 'create'])->name('files.create');
+    Route::post('/files', [FileController::class, 'store'])->name('files.store');
+    Route::get('/files/{file}/edit', [FileController::class, 'edit'])->name('files.edit');
+    Route::post('/files/{file}', [FileController::class, 'update'])->name('files.update');
+    Route::post('/files/{file}/delete', [FileController::class, 'destroy'])->name('files.destroy');
+    Route::get('/files/export', [FileController::class, 'export'])->name('files.export');
 });
 
 Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(function () {

@@ -43,6 +43,7 @@ export const InputFile = forwardRef(function InputFile(
         onChange,
         error,
         disabled = false,
+        accept = "",
     },
     ref
 ) {
@@ -62,6 +63,7 @@ export const InputFile = forwardRef(function InputFile(
                 value={value}
                 onChange={onChange}
                 disabled={disabled}
+                accept={accept || undefined}
             />
             {error && <div className="text-error text-sm mt-1">{error}</div>}
         </div>

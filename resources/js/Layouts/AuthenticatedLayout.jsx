@@ -7,6 +7,7 @@ import {
     FaBox,
     FaCalendarAlt,
     FaTasks,
+    FaFile,
 } from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
@@ -55,6 +56,12 @@ export default function AuthenticatedLayout({ children }) {
             label: "Tugas",
             icon: <FaTasks />,
             routeStr: "tasks.index",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        },
+        {
+            label: "File",
+            icon: <FaFile />,
+            routeStr: "files.index",
             roles: ["admin", "ketua tim", "teknisi", "operator"],
         },
     ];

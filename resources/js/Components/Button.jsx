@@ -19,6 +19,19 @@ export function ViewButton({ route = "" }) {
     );
 }
 
+export function ViewButtonFunction({ onClick }) {
+    return (
+        <button
+            onClick={onClick}
+            className="btn btn-sm btn-primary"
+            type="button"
+        >
+            <FaEye />
+            <span className="hidden sm:flex">Lihat</span>
+        </button>
+    );
+}
+
 export function EditButton({ route = "" }) {
     return (
         <Link href={route} className="btn btn-sm btn-success">
@@ -37,12 +50,12 @@ export function DeleteButton({ onClick }) {
     );
 }
 
-export function DownloadButton({ onClick }) {
+export function DownloadButton({ onClick, className = "mr-2" }) {
     return (
         <button
             type="button"
             onClick={onClick}
-            className="btn btn-neutral mr-2"
+            className={`btn btn-neutral ${className}`}
         >
             <FaDownload />
             <span className="hidden sm:flex">Unduh</span>
