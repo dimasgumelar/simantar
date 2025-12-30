@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('pic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('inventory_id')->constrained()->onDelete('cascade');
             $table->string('photo_path')->nullable();
             $table->tinyInteger('status'); // 1: pinjam, 2: serahkan, 3: kembalikan, 4: alat baru 
             $table->text('description')->nullable();

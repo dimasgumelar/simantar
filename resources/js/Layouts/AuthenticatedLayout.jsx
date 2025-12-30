@@ -8,6 +8,7 @@ import {
     FaCalendarAlt,
     FaTasks,
     FaFile,
+    FaArchive,
 } from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
@@ -34,12 +35,12 @@ export default function AuthenticatedLayout({ children }) {
             routeStr: "transmissions.index",
             roles: ["admin", "ketua tim", "teknisi", "operator"],
         },
-        // {
-        //     label: "Categories",
-        //     icon: <FaArchive />,
-        //     routeStr: "categories.index",
-        //     roles: ["admin", "ketua tim", "teknisi", "operator"],
-        // },
+        {
+            label: "Kategori",
+            icon: <FaArchive />,
+            routeStr: "categories.index",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        },
         {
             label: "Alat",
             icon: <FaBox />,

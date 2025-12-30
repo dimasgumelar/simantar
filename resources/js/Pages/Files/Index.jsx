@@ -159,7 +159,7 @@ export default function FilesIndex({ files }) {
                                 {files.data.length === 0 ? (
                                     <TableNotFound
                                         message="Tidak ada file yang ditemukan."
-                                        colspan={6}
+                                        colspan={4}
                                     />
                                 ) : (
                                     files.data.map((file, index) => (

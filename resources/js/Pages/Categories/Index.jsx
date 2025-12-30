@@ -13,7 +13,7 @@ import { inertiaGet } from "@/utils/helper-function";
 
 export default function CategoriesIndex({ categories }) {
     const breadcrumbs = [
-        <Link href={route("categories.index")}>Categories</Link>,
+        <Link href={route("categories.index")}>Kategori</Link>,
         "Daftar",
     ];
     const [deleteCategoryId, setDeleteCategoryId] = useState(null);
@@ -95,7 +95,7 @@ export default function CategoriesIndex({ categories }) {
                         </form>
                         <CreateButton
                             route={route("categories.create")}
-                            title="Create Category"
+                            title="Tambah Kategori"
                         />
                     </div>
                     <div className="overflow-x-auto">
@@ -105,14 +105,14 @@ export default function CategoriesIndex({ categories }) {
                                 <tr>
                                     <th></th>
                                     <SortableHeader
-                                        label="Name"
+                                        label="Nama"
                                         column="name"
                                         sortField={sortField}
                                         sortDirection={sortDirection}
                                         onSort={handleSort}
                                     />
                                     <SortableHeader
-                                        label="Description"
+                                        label="Deskripsi"
                                         column="description"
                                         sortField={sortField}
                                         sortDirection={sortDirection}
@@ -124,7 +124,7 @@ export default function CategoriesIndex({ categories }) {
                             <tbody>
                                 {categories.data.length === 0 ? (
                                     <TableNotFound
-                                        message="No categories found."
+                                        message="Tidak ada kategori yang ditemukan."
                                         colspan={4}
                                     />
                                 ) : (
@@ -150,7 +150,7 @@ export default function CategoriesIndex({ categories }) {
                                                         >
                                                             <FaEdit />
                                                             <span className="hidden sm:flex">
-                                                                Edit
+                                                                Ubah
                                                             </span>
                                                         </Link>
                                                         <button
@@ -163,14 +163,14 @@ export default function CategoriesIndex({ categories }) {
                                                         >
                                                             <FaTrash />
                                                             <span className="hidden sm:flex">
-                                                                Delete
+                                                                Hapus
                                                             </span>
                                                         </button>
                                                     </>
                                                 )}
                                                 {category.id === 1 && (
                                                     <span className="badge badge-secondary">
-                                                        Default Category
+                                                        Kategori Default
                                                     </span>
                                                 )}
                                             </td>
@@ -191,7 +191,7 @@ export default function CategoriesIndex({ categories }) {
                 modalRef={modalRef}
                 onCancel={closeDeleteModal}
                 onConfirm={handleDelete}
-                title="category"
+                title="kategori"
             />
         </AuthenticatedLayout>
     );
