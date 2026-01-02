@@ -103,13 +103,13 @@ export default function Sidebar({
                 {
                     label: "Form Genset",
                     icon: <FaIndustry />,
-                    routeStr: "inventories.index",
+                    routeStr: "mg.create",
                     roles: ["admin", "ketua tim", "teknisi", "operator"],
                 },
                 {
                     label: "BBM & Oli",
                     icon: <FaGasPump />,
-                    routeStr: "inventoryTransactions.index",
+                    routeStr: "molibbm.create",
                     roles: ["admin", "ketua tim", "teknisi", "operator"],
                 },
             ],
