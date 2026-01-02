@@ -26,7 +26,15 @@ class UserRepository
             $query->orderBy($sortField, $sortDirection);
         }
 
-       $users = $perPage == 0
+        // $sql = vsprintf(
+        //     str_replace('?', "'%s'", $query->toSql()),
+        //     $query->getBindings()
+        // );
+
+        // dd($sql);
+
+
+        $users = $perPage == 0
             ? $query->get()
             : $query->paginate($perPage)->withQueryString()->onEachSide(0);
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MaintenanceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\InventoryTransactionsController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
@@ -80,6 +81,13 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi'])->group(function () {
     Route::post('/files/{file}', [FileController::class, 'update'])->name('files.update');
     Route::post('/files/{file}/delete', [FileController::class, 'destroy'])->name('files.destroy');
     Route::get('/files/export', [FileController::class, 'export'])->name('files.export');
+
+    Route::get('/inventory-transactions', [InventoryTransactionsController::class, 'index'])->name('inventoryTransactions.index');
+    Route::get('/inventory-transactions/create', [InventoryTransactionsController::class, 'create'])->name('inventoryTransactions.create');
+    Route::post('/inventory-transactions', [InventoryTransactionsController::class, 'store'])->name('inventoryTransactions.store');
+    Route::get('/inventory-transactions/{inventoryTransaction}/edit', [InventoryTransactionsController::class, 'edit'])->name('inventoryTransactions.edit');
+    Route::post('/inventory-transactions/{inventoryTransaction}', [InventoryTransactionsController::class, 'update'])->name('inventoryTransactions.update');
+    Route::post('/inventory-transactions/{inventoryTransaction}/delete', [InventoryTransactionsController::class, 'destroy'])->name('inventoryTransactions.destroy');
 });
 
 Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(function () {

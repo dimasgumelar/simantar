@@ -17,16 +17,18 @@ import {
 import { BadgeCondition } from "@/Components/Badge";
 import { inertiaGet } from "@/utils/helper-function";
 import Roles from "@/utils/UserFromUsePage";
-import { BreadcrumbsInventories } from "@/Pages/Inventories/Constant";
+import { BreadcrumbsInventoryTransactions } from "@/Pages/InventoryTransactions/Constant";
 
-export default function InventoriesIndex({ inventories }) {
+export default function InventoryTransactionsIndex({ inventoryTransactions }) {
     const { role } = Roles();
-    const breadcrumbs = [<BreadcrumbsInventories />, "Daftar"];
+    const breadcrumbs = [<BreadcrumbsInventoryTransactions />, "Daftar"];
     const [deleteInventoryId, setDeleteInventoryId] = useState(null);
     const modalRef = useRef(null);
     const { post, processing } = useForm();
 
-    const [perPage, setPerPage] = useState(inventories.per_page || 10);
+    const [perPage, setPerPage] = useState(
+        inventoryTransactions.per_page || 10
+    );
     const [search, setSearch] = useState("");
     const [sortField, setSortField] = useState("");
     const [sortDirection, setSortDirection] = useState("");
@@ -44,7 +46,7 @@ export default function InventoriesIndex({ inventories }) {
 
     function handleDelete() {
         if (deleteInventoryId) {
-            post(route("inventories.destroy", deleteInventoryId), {
+            post(route("inventoryTransactions.destroy", deleteInventoryId), {
                 onSuccess: () => {
                     closeDeleteModal();
                 },
@@ -56,7 +58,7 @@ export default function InventoriesIndex({ inventories }) {
     }
 
     function applyFilters(overrides = {}) {
-        inertiaGet("inventories.index", {
+        inertiaGet("inventoryTransactions.index", {
             page: 1,
             per_page: perPage,
             search: search,
@@ -87,7 +89,7 @@ export default function InventoriesIndex({ inventories }) {
     }
 
     function handleExport() {
-        window.location.href = route("inventories.export", {
+        window.location.href = route("inventoryTransactions.export", {
             search: search,
             sort: sortField,
             direction: sortDirection,
@@ -112,8 +114,8 @@ export default function InventoriesIndex({ inventories }) {
                             role.hasKetuaTim ||
                             role.hasTeknisi) && (
                             <CreateButton
-                                route={route("inventories.create")}
-                                title="Tambah Alat"
+                                route={route("inventoryTransactions.create")}
+                                title="Tambah Transaksi Alat"
                             />
                         )}
                     </div>
@@ -124,100 +126,113 @@ export default function InventoriesIndex({ inventories }) {
                                 <tr>
                                     <th></th>
                                     <SortableHeader
-                                        label="Kode"
-                                        column="inventory_code"
+                                        label="Alat"
+                                        column="inventory"
                                         sortField={sortField}
                                         sortDirection={sortDirection}
                                         onSort={handleSort}
                                     />
                                     <SortableHeader
-                                        label="Nama"
+                                        label="Peminjam"
                                         column="name"
                                         sortField={sortField}
                                         sortDirection={sortDirection}
                                         onSort={handleSort}
                                     />
-                                    {/* <SortableHeader
-                                        label="Category"
-                                        column="category"
-                                        sortField={sortField}
-                                        sortDirection={sortDirection}
-                                        onSort={handleSort}
-                                    /> */}
                                     <SortableHeader
-                                        label="Transmisi"
-                                        column="transmission"
+                                        label="Penerima"
+                                        column="pic"
                                         sortField={sortField}
                                         sortDirection={sortDirection}
                                         onSort={handleSort}
                                     />
-                                    <th>Kondisi</th>
+                                    <SortableHeader
+                                        label="Status"
+                                        column="status"
+                                        sortField={sortField}
+                                        sortDirection={sortDirection}
+                                        onSort={handleSort}
+                                    />
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {inventories.data.length === 0 ? (
+                                {inventoryTransactions.data.length === 0 ? (
                                     <TableNotFound
                                         message="Tidak ada alat yang ditemukan."
                                         colspan={6}
                                     />
                                 ) : (
-                                    inventories.data.map((inventory, index) => (
-                                        <tr key={inventory.id}>
-                                            <th>
-                                                {(inventories.current_page -
-                                                    1) *
-                                                    inventories.per_page +
-                                                    index +
-                                                    1}
-                                            </th>
-                                            <td>{inventory.inventory_code}</td>
-                                            <td>{inventory.name}</td>
-                                            {/* <td>{inventory.category.name}</td> */}
-                                            <td>
-                                                {inventory.transmission.name}
-                                            </td>
-                                            <td>
-                                                <BadgeCondition
-                                                    param={inventory.condition}
-                                                />
-                                            </td>
-                                            <td className="flex flex-wrap justify-center items-center gap-2">
-                                                <ViewButton
-                                                    route={route(
-                                                        "inventories.view",
-                                                        inventory.id
+                                    inventoryTransactions.data.map(
+                                        (inventoryTransaction, index) => (
+                                            <tr key={inventoryTransaction.id}>
+                                                <th>
+                                                    {(inventoryTransactions.current_page -
+                                                        1) *
+                                                        inventoryTransactions.per_page +
+                                                        index +
+                                                        1}
+                                                </th>
+                                                <td>
+                                                    {
+                                                        inventoryTransaction
+                                                            .inventory.name
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        inventoryTransaction
+                                                            .user.name
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        inventoryTransaction.pic
+                                                            .name
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        inventoryTransaction.status_name
+                                                    }
+                                                </td>
+                                                <td className="flex flex-wrap justify-center items-center gap-2">
+                                                    {/* <ViewButton
+                                                        route={route(
+                                                            "inventoryTransactions.view",
+                                                            inventoryTransaction.id
+                                                        )}
+                                                    /> */}
+                                                    {(role.hasAdmin ||
+                                                        role.hasKetuaTim ||
+                                                        role.hasTeknisi) && (
+                                                        <>
+                                                            {/* <EditButton
+                                                                route={route(
+                                                                    "inventoryTransactions.edit",
+                                                                    inventoryTransaction.id
+                                                                )}
+                                                            /> */}
+                                                            <DeleteButton
+                                                                onClick={() =>
+                                                                    openDeleteModal(
+                                                                        inventoryTransaction.id
+                                                                    )
+                                                                }
+                                                            />
+                                                        </>
                                                     )}
-                                                />
-                                                {(role.hasAdmin ||
-                                                    role.hasKetuaTim ||
-                                                    role.hasTeknisi) && (
-                                                    <>
-                                                        <EditButton
-                                                            route={route(
-                                                                "inventories.edit",
-                                                                inventory.id
-                                                            )}
-                                                        />
-                                                        <DeleteButton
-                                                            onClick={() =>
-                                                                openDeleteModal(
-                                                                    inventory.id
-                                                                )
-                                                            }
-                                                        />
-                                                    </>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))
+                                                </td>
+                                            </tr>
+                                        )
+                                    )
                                 )}
                             </tbody>
                         </table>
                         <Pagination
                             perPage={perPage}
                             handlePerPageChange={handlePerPageChange}
-                            data={inventories.links}
+                            data={inventoryTransactions.links}
                         />
                     </div>
                 </div>
@@ -226,7 +241,7 @@ export default function InventoriesIndex({ inventories }) {
                 modalRef={modalRef}
                 onCancel={closeDeleteModal}
                 onConfirm={handleDelete}
-                title="kategori"
+                title="transaksi alat"
                 isDeleting={processing}
             />
         </AuthenticatedLayout>
