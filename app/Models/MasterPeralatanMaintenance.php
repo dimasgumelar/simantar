@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MasterPeralatanMaintenance extends Model
 {
-    protected $table = 'tb_master_peralatan_maintenance';
+    protected $table = 'm_peralatan_maintenances';
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_peralatan',

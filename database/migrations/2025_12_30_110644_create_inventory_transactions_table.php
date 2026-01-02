@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('inventory_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('pic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pic_id')->constrained("users")->onDelete('cascade');
             $table->foreignId('inventory_id')->constrained()->onDelete('cascade');
             $table->string('photo_path')->nullable();
             $table->tinyInteger('status'); // 1: Pinjam, 2: Serahkan ke Transmisi, 3: Serahkan ke Pihak Ketiga, 4: Kembalikan, 5: Alat Baru, 6: Alat dari Transmisi Lain 
