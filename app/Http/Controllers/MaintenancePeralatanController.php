@@ -8,6 +8,7 @@ use App\Services\TransmissionService;
 use App\Services\MaintenanceService;
 use App\Services\UserService;
 use App\Services\UserTransmissionService;
+use App\Repositories\UserTransmissionRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -18,17 +19,25 @@ class MaintenancePeralatanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    protected $userTransmissionService;
+
+    public function __construct(userTransmissionService $userTransmissionService)
     {
-        $userId = null;
-        if (!Auth::user()->hasAnyRole(['admin', 'ketua tim'])) {
-            $userId = Auth::user()->id;
-        }
+        $this->userTransmissionService = $userTransmissionService;
+    }
 
-        //$maintenances = $this->maintenanceService->getAll($search, $perPage, $sortField, $sortDirection, null, $userId);
-        $notif = "haloo";
-
-        return Inertia::render('TransmissionMaintenances/Index', compact('notif'));
+    public function index(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $userName = Auth::user()->name;
+        //dd($this->userTransmissionService->getById(12));
+        // $userTransmissions = $this->userTransmissionService->getById(12);
+        $sortField = $request->sort;
+        $sortDirection = $request->direction;
+        $userTransmissions = $this->userTransmissionService->getAllByUserId($userId, 10, $sortField, $sortDirection);
+        //dd($userTransmissions);
+        //$userTransmissions = "Oro-oro Ombo";
+        return Inertia::render('TransmissionMaintenances/Index', compact('userName', 'userTransmissions'));
     }
 
     /**

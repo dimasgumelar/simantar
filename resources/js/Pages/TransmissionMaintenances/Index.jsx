@@ -9,7 +9,9 @@ import {
 } from "@/Components/Button";
 import { BreadcrumbsTXMaintenance } from "@/Pages/TransmissionMaintenances/Constant";
 
-export default function DailyMaintenanceIndex({ dailymaintenance }) {
+export default function DailyMaintenanceIndex({ userName, userTransmissions }) {
+    console.log(userTransmissions.data);
+    
     const breadcrumbs = [<BreadcrumbsTXMaintenance />, "Daftar"];
 
     return (
@@ -32,27 +34,12 @@ export default function DailyMaintenanceIndex({ dailymaintenance }) {
                                 <input type="date" />
                             </label>  
                             <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Lokasi Transmisi</legend>
-                            <select defaultValue="Pick a browser" className="select">
-                                <option disabled={true}>Pilih Transmisi</option>
-                                <option>Mayjen Sungkono</option>
-                                <option>Sambikerep</option>
-                                <option>Oro-oro Ombo</option>
-                                <option>Tuban</option>
-                                <option>Besuki</option>
-                                <option>Alasmalang</option>
-                                <option>Brengos</option>
-                                <option>Brengik</option>
-                                <option>Gn. Doek</option>
-                                <option>Gn. Gending</option>
-                                <option>Gn. Pandan</option>
-                                <option>Wonogondo</option>
-                                
-                            </select>
+                                <legend className="fieldset-legend">Nama Transmisi</legend>
+                                <input name="userTransmission" type="text" className="input" placeholder="" value={userTransmissions.data[0].name} readOnly/>
                             </fieldset>
                             <fieldset className="fieldset">
                                 <legend className="fieldset-legend">Nama Teknisi</legend>
-                                <input type="text" className="input" placeholder="Masukkan Nama Teknisi" />
+                                <input name="username" type="text" className="input" placeholder="" value={userName} readOnly/>
                             </fieldset>
                             <fieldset className="fieldset">
                                 <legend className="fieldset-legend">Tindakan</legend>
