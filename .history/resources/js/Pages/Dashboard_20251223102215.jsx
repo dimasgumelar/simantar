@@ -35,7 +35,7 @@ export default function Dashboard({ maintenance, task }) {
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Menunggu</div>
                                     <div className="stat-value text-primary">
-                                        {maintenance?.pending}
+                                        {maintenance.pending}
                                     </div>
                                 </div>
 
@@ -44,28 +44,28 @@ export default function Dashboard({ maintenance, task }) {
                                         Dalam Proses
                                     </div>
                                     <div className="stat-value text-warning">
-                                        {maintenance?.inprogress}
+                                        {maintenance.inprogress}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Selesai</div>
                                     <div className="stat-value text-info">
-                                        {maintenance?.completed}
+                                        {maintenance.completed}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Ditolak</div>
                                     <div className="stat-value text-error">
-                                        {maintenance?.rejected}
+                                        {maintenance.rejected}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Disetujui</div>
                                     <div className="stat-value text-success">
-                                        {maintenance?.approved}
+                                        {maintenance.approved}
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ export default function Dashboard({ maintenance, task }) {
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Menunggu</div>
                                     <div className="stat-value text-primary">
-                                        {task?.pending}
+                                        {task.pending}
                                     </div>
                                 </div>
 
@@ -91,28 +91,28 @@ export default function Dashboard({ maintenance, task }) {
                                         Dalam Proses
                                     </div>
                                     <div className="stat-value text-warning">
-                                        {task?.inprogress}
+                                        {task.inprogress}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Selesai</div>
                                     <div className="stat-value text-info">
-                                        {task?.completed}
+                                        {task.completed}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Ditolak</div>
                                     <div className="stat-value text-error">
-                                        {task?.rejected}
+                                        {task.rejected}
                                     </div>
                                 </div>
 
                                 <div className="stat place-items-center">
                                     <div className="stat-title">Disetujui</div>
                                     <div className="stat-value text-success">
-                                        {task?.approved}
+                                        {task.approved}
                                     </div>
                                 </div>
                             </div>
