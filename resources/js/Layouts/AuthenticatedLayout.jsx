@@ -1,25 +1,5 @@
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import {
-    FaHome,
-    FaUser,
-    FaBroadcastTower,
-    FaBox,
-    FaCalendarAlt,
-    FaTasks,
-    FaFile,
-    FaArchive,
-    FaCogs,
-    FaIndustry,
-    FaTools,
-    FaBolt,
-    FaGasPump,
-    FaTv,
-    FaChartLine,
-    FaWrench,
-    FaClipboardList,
-    FaChevronDown,
-} from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 import Sidebar from "@/Components/Sidebar";
 
