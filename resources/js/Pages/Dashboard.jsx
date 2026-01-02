@@ -1,8 +1,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { BadgeRole } from "@/Components/Badge";
+import Roles from "@/utils/UserFromUsePage";
 
 export default function Dashboard({}) {
+    const { userFromUsePage, role } = Roles();
+
     return (
         <AuthenticatedLayout
             header={
