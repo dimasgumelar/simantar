@@ -9,6 +9,7 @@ import {
     FaTasks,
     FaFile,
     FaArchive,
+    FaQuestionCircle,
 } from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
@@ -63,6 +64,12 @@ export default function AuthenticatedLayout({ children }) {
             label: "File",
             icon: <FaFile />,
             routeStr: "files.index",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        },
+                {
+            label: "Monitoring TX",
+            icon: <FaQuestionCircle/>,
+            routeStr: "monitorings.index",
             roles: ["admin", "ketua tim", "teknisi", "operator"],
         },
     ];

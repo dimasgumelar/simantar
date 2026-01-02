@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Run the migrations.      
      */
     public function up(): void
     {
         Schema::create('inventory_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('pic_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pic_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('inventory_id')->constrained()->onDelete('cascade');
             $table->string('photo_path')->nullable();
             $table->tinyInteger('status'); // 1: pinjam, 2: serahkan, 3: kembalikan, 4: alat baru 

@@ -9,6 +9,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
+use App\Http\Controllers\MonitoringPeralatanController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,7 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(func
     Route::get('/transmissions/{transmission}/view', [TransmissionController::class, 'show'])->name('transmissions.view');
     Route::get('/inventories', [InventoryController::class, 'index'])->name('inventories.index');
     Route::get('/inventories/{inventory}/view', [InventoryController::class, 'show'])->name('inventories.view');
+    Route::get('/monitorings', [MonitoringPeralatanController::class, 'index'])->name('monitorings.index');
 
     Route::post('/feedbacks/{maintenance}/store', [FeedbackController::class, 'store'])->name('feedbacks.store');
     Route::post('/feedbacks/upload', [FeedbackController::class, 'upload'])->name('feedbacks.upload');
