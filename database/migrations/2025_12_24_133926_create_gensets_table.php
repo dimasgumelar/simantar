@@ -30,7 +30,7 @@ return new class extends Migration
             $table->integer('beban_genset');
             $table->string('kondisi_oli');
             $table->string('link_foto');
-            $table->integer('konsumsi_bbm');
+            $table->decimal('konsumsi_bbm');
             $table->string('kategori');
             $table->timestamps();
             $table->softdeletes();
@@ -39,10 +39,11 @@ return new class extends Migration
         
         Schema::create('tb_master_data_genset', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_transmisi');
             $table->string('tipe_genset');
             $table->string('merek_genset');
-            $table->integer('kapasitas_daya_kva');
-            $table->integer('kapasitas_daya_kwh');
+            $table->decimal('kapasitas_daya_kva');
+            $table->decimal('kapasitas_daya_kwh');
             $table->string('model_mesin');
             $table->string('rate_model');
             $table->timestamps();
@@ -55,7 +56,7 @@ return new class extends Migration
             $table->foreignId('id_user');
             $table->foreignId('id_transmisi');
             $table->date('tanggal');
-            $table->integer('total_solar_oli');
+            $table->decimal('total_solar_oli');
             $table->string('keterangan');
             $table->timestamps();
             $table->softdeletes();

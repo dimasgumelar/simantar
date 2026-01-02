@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\GensetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\UserTransmissionController;
 use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -86,6 +88,12 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(func
     Route::post('/tasks/{maintenance}/start', [FeedbackController::class, 'start'])->name('tasks.start');
     Route::get('/tasks/{maintenance}/view', [FeedbackController::class, 'show'])->name('tasks.view');
     Route::post('/tasks/{maintenance}/complete', [FeedbackController::class, 'complete'])->name('tasks.complete');
+   
+    Route::get('/monitoring-genset/create', [GensetController::class, 'mg_create'])->name('mg.create');
+    Route::post('/monitoring-genset/store', [GensetController::class, 'mg_store'])->name('mg.store');
+
+    Route::get('/monitoring-olibbm/create', [GensetController::class, 'molibbm_create'])->name('molibbm.create');
+    Route::post('/monitoring-olibbm/store', [GensetController::class, 'molibbm_store'])->name('molibbm.store');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

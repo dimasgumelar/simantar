@@ -46,3 +46,18 @@ export const STATUS_LIST = [
         label: "Selesai",
     },
 ];
+
+export const GENSET_OPTIONS = [
+    { value: "PLN OFF", label: "PLN OFF" },
+    { value: "PLN ON", label: "PLN ON" },
+];
+
+export const OLI_OPTIONS = [
+    { value: "BAIK", label: "BAIK" },
+    { value: "KURANG", label: "KURANG" },
+];
+
+export const MOLIBBM_OPTIONS = [
+    { value: "OLI", label: "OLI" },
+    { value: "BBM", label: "BBM" },
+];

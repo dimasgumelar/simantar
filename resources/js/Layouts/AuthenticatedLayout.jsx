@@ -57,6 +57,19 @@ export default function AuthenticatedLayout({ children }) {
             routeStr: "tasks.index",
             roles: ["admin", "ketua tim", "teknisi", "operator"],
         },
+        {
+            label: "Genset Form",
+            icon: <FaTasks />,
+            routeStr: "mg.create",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        },
+        {
+            label:"Oli BBM Form",
+            icon: <FaTasks />,
+            routeStr: "molibbm.create",
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
+        },
+
     ];
     const userRoleNames =
         userFromUsePage?.roles?.map((role) => role.name) ?? [];
