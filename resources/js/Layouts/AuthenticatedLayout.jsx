@@ -1,69 +1,12 @@
 import { Link, router, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import {
-    FaHome,
-    FaUser,
-    FaBroadcastTower,
-    FaBox,
-    FaCalendarAlt,
-    FaTasks,
-} from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
+import Sidebar from "@/Components/Sidebar";
 
 export default function AuthenticatedLayout({ children }) {
     const { props } = usePage();
     const userFromUsePage = props.user;
 
-    const menuItems = [
-        {
-            label: "Beranda",
-            icon: <FaHome />,
-            routeStr: "dashboard",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
-        },
-        {
-            label: "Pengguna",
-            icon: <FaUser />,
-            routeStr: "users.index",
-            roles: ["admin", "ketua tim"],
-        },
-        {
-            label: "Transmisi",
-            icon: <FaBroadcastTower />,
-            routeStr: "transmissions.index",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
-        },
-        // {
-        //     label: "Categories",
-        //     icon: <FaArchive />,
-        //     routeStr: "categories.index",
-        //     roles: ["admin", "ketua tim", "teknisi", "operator"],
-        // },
-        {
-            label: "Alat",
-            icon: <FaBox />,
-            routeStr: "inventories.index",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
-        },
-        {
-            label: "Pemeliharaan",
-            icon: <FaCalendarAlt />,
-            routeStr: "maintenances.index",
-            roles: ["admin", "ketua tim", "teknisi"],
-        },
-        {
-            label: "Tugas",
-            icon: <FaTasks />,
-            routeStr: "tasks.index",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
-        },
-        {
-            label: "Pemeliharaan Transmisi",
-            icon: <FaTasks />,
-            routeStr: "transmissionmaintenance.index",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
-        }
-    ];
     const userRoleNames =
         userFromUsePage?.roles?.map((role) => role.name) ?? [];
 
@@ -87,26 +30,7 @@ export default function AuthenticatedLayout({ children }) {
         <div className="flex h-screen">
             <FlashToast />
             {/* Sidebar */}
-            <div
-                className={`hidden sm:flex bg-base-200 p-4 flex-col transition-width duration-300 ${
-                    open ? "w-60" : "w-16"
-                }`}
-            >
-                {menuItems
-                    .filter((item) =>
-                        item.roles.some((role) => userRoleNames.includes(role))
-                    )
-                    .map(({ label, icon, routeStr }) => (
-                        <Link
-                            key={label}
-                            className="flex items-center space-x-4 hover:bg-base-300 rounded p-2"
-                            href={route(routeStr)}
-                        >
-                            {icon}
-                            {open && <span>{label}</span>}
-                        </Link>
-                    ))}
-            </div>
+            <Sidebar userRoleNames={userRoleNames} open={open} />
 
             {/* Content area */}
             <div className="flex flex-col h-screen bg-base-100 w-full">
@@ -166,24 +90,13 @@ export default function AuthenticatedLayout({ children }) {
                                     aria-label="close sidebar"
                                     className="drawer-overlay"
                                 ></label>
-                                <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                                <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-0">
                                     {/* Sidebar content here */}
-                                    {menuItems
-                                        .filter((item) =>
-                                            item.roles.some((role) =>
-                                                userRoleNames.includes(role)
-                                            )
-                                        )
-                                        .map(({ label, icon, routeStr }) => (
-                                            <Link
-                                                key={label}
-                                                href={route(routeStr)}
-                                                className="flex items-center space-x-4 hover:bg-base-300 rounded p-2"
-                                            >
-                                                {icon}
-                                                <span>{label}</span>
-                                            </Link>
-                                        ))}
+                                    <Sidebar
+                                        userRoleNames={userRoleNames}
+                                        open={open}
+                                        isDrawer={true}
+                                    />
                                 </ul>
                             </div>
                         </div>

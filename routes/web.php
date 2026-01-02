@@ -4,7 +4,10 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\MaintenanceController;
+use App\Http\Controllers\GensetController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\InventoryTransactionsController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
@@ -15,6 +18,7 @@ use App\Models\MasterDetailPeralatanMaintenance;
 use App\Models\MasterPeralatanMaintenance;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -73,6 +77,23 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi'])->group(function () {
     // Route::get('/maintenances/{maintenance}/edit', [MaintenanceController::class, 'edit'])->name('maintenances.edit');
     Route::post('/maintenances/{maintenance}', [MaintenanceController::class, 'update'])->name('maintenances.update');
     Route::post('/maintenances/{maintenance}/delete', [MaintenanceController::class, 'destroy'])->name('maintenances.destroy');
+    Route::post('/maintenances/{maintenance}/approve', [MaintenanceController::class, 'approve'])->name('maintenances.approve');
+    Route::post('/maintenances/{maintenance}/reject', [MaintenanceController::class, 'reject'])->name('maintenances.reject');
+
+    Route::get('/files', [FileController::class, 'index'])->name('files.index');
+    Route::get('/files/create', [FileController::class, 'create'])->name('files.create');
+    Route::post('/files', [FileController::class, 'store'])->name('files.store');
+    Route::get('/files/{file}/edit', [FileController::class, 'edit'])->name('files.edit');
+    Route::post('/files/{file}', [FileController::class, 'update'])->name('files.update');
+    Route::post('/files/{file}/delete', [FileController::class, 'destroy'])->name('files.destroy');
+    Route::get('/files/export', [FileController::class, 'export'])->name('files.export');
+
+    Route::get('/inventory-transactions', [InventoryTransactionsController::class, 'index'])->name('inventoryTransactions.index');
+    Route::get('/inventory-transactions/create', [InventoryTransactionsController::class, 'create'])->name('inventoryTransactions.create');
+    Route::post('/inventory-transactions', [InventoryTransactionsController::class, 'store'])->name('inventoryTransactions.store');
+    Route::get('/inventory-transactions/{inventoryTransaction}/edit', [InventoryTransactionsController::class, 'edit'])->name('inventoryTransactions.edit');
+    Route::post('/inventory-transactions/{inventoryTransaction}', [InventoryTransactionsController::class, 'update'])->name('inventoryTransactions.update');
+    Route::post('/inventory-transactions/{inventoryTransaction}/delete', [InventoryTransactionsController::class, 'destroy'])->name('inventoryTransactions.destroy');
 });
 
 Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(function () {
@@ -92,6 +113,12 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator'])->group(func
     //Maintenance Harian
     Route::get('/transmissionmaintenance', [MaintenancePeralatanController::class, 'index'])->name('transmissionmaintenance.index');
     //Route::get('/dailymaintenance/{daily}/view', [MaintenancePeralatanController::class, 'show'])->name('daily.view');
+
+    Route::get('/monitoring-genset/create', [GensetController::class, 'mg_create'])->name('mg.create');
+    Route::post('/monitoring-genset/store', [GensetController::class, 'mg_store'])->name('mg.store');
+
+    Route::get('/monitoring-olibbm/create', [GensetController::class, 'molibbm_create'])->name('molibbm.create');
+    Route::post('/monitoring-olibbm/store', [GensetController::class, 'molibbm_store'])->name('molibbm.store');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

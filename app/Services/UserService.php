@@ -19,6 +19,7 @@ class UserService
 
     public function getAll($search, $roleIds, $perPage, $sortField, $sortDirection)
     {
+        // dd($search);
         return $this->userRepo->all($search, $roleIds, $perPage, $sortField, $sortDirection);
     }
 

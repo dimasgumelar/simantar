@@ -12,19 +12,27 @@ export function parseStatus(params) {
         return "Dalam Proses";
     } else if (params === 2) {
         return "Selesai";
+    } else if (params === 3) {
+        return "Ditolak";
+    } else if (params === 4) {
+        return "Disetujui";
     }
     return "Tidak Diketahui";
 }
 
 export function parseStatusClass(params) {
     if (params === 0) {
-        return "badge-error";
+        return "badge-primary";
     } else if (params === 1) {
         return "badge-warning";
     } else if (params === 2) {
+        return "badge-info";
+    } else if (params === 3) {
+        return "badge-error";
+    } else if (params === 4) {
         return "badge-success";
     }
-    return "badge-error";
+    return "badge-secondary";
 }
 
 export function parseCondition(params) {

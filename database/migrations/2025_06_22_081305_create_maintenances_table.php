@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('inventory_id')->constrained()->onDelete('cascade');
             $table->foreignId('transmission_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('status')->default(0); // 0: pending, 1: in progress, 2: completed
+            // $table->integer('status')->default(0); // 0: pending, 1: in progress, 2: completed
             $table->text('description')->nullable();
-            $table->text('feedback')->nullable();
-            $table->datetime('inprogress_at')->nullable();
-            $table->datetime('completed_at')->nullable();
+            // $table->text('feedback')->nullable();
+            // $table->datetime('inprogress_at')->nullable();
+            // $table->datetime('completed_at')->nullable();
             $table->datetime('scheduled_at');
             $table->text('schedule_response'); // json response third-party
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
