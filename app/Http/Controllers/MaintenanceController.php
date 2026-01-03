@@ -6,6 +6,7 @@ use App\Models\Maintenance;
 use App\Services\InventoryService;
 use App\Services\TransmissionService;
 use App\Services\MaintenanceService;
+use App\Services\MaintenanceStatusHistoryService;
 use App\Services\UserService;
 use App\Services\UserTransmissionService;
 use Illuminate\Http\Request;
@@ -16,15 +17,17 @@ use App\Services\ExportService;
 class MaintenanceController extends Controller
 {
     protected $maintenanceService;
+    protected $maintenanceStatusHistoryService;
     protected $inventoryService;
     protected $transmissionService;
     protected $userService;
     protected $userTransmissionService;
     protected $exportService;
 
-    public function __construct(MaintenanceService $maintenanceService, InventoryService $inventoryService, TransmissionService $transmissionService, UserService $userService, UserTransmissionService $userTransmissionService, ExportService $exportService)
+    public function __construct(MaintenanceService $maintenanceService, MaintenanceStatusHistoryService $maintenanceStatusHistoryService, InventoryService $inventoryService, TransmissionService $transmissionService, UserService $userService, UserTransmissionService $userTransmissionService, ExportService $exportService)
     {
         $this->maintenanceService = $maintenanceService;
+        $this->maintenanceStatusHistoryService = $maintenanceStatusHistoryService;
         $this->inventoryService = $inventoryService;
         $this->transmissionService = $transmissionService;
         $this->userService = $userService;
@@ -169,12 +172,11 @@ class MaintenanceController extends Controller
             'user_id' => 'required|min:0',
             'description' => 'max:255',
             'scheduled_at' => 'required|date',
-            'status' => 'required|min:0|max:2',
+            // 'status' => 'required|min:0|max:2',
         ]);
-        // dd($data);
-        $data["status"] = 0;
-        $data["created_by"] = Auth::user()->id;
 
+        $data["created_by"] = Auth::user()->id;
+        
         $maintenance = $this->maintenanceService->create($data);
         if (!$maintenance) {
             return redirect()->back()->with('error', 'Gagal menambah pemeliharaan.');
@@ -192,6 +194,15 @@ class MaintenanceController extends Controller
             return redirect()->route('maintenances.index')->with('error', 'Data pemeliharaan tidak ditemukan.');
         }
 
+        $maintenance->load([
+            'status_histories.user',
+            'transmission',
+            'inventory',
+            'user',
+            'created_by_user',
+            'feedbacks',
+        ]);
+
         return Inertia::render('Maintenances/Show', [
             'maintenance' => $maintenance,
             'transmission' => $maintenance->transmission,
@@ -199,6 +210,7 @@ class MaintenanceController extends Controller
             'user_maintenance' => $maintenance->user,
             'created_by_user' => $maintenance->created_by_user,
             'feedbacks' => $maintenance->feedbacks,
+            'status_histories' => $maintenance->status_histories,
         ]);
     }
 
@@ -277,40 +289,49 @@ class MaintenanceController extends Controller
         if (!$deleted) {
             return redirect()->back()->with('error', 'Gagal menghapus data pemeliharaan.');
         }
-
+        
         return redirect()->route('maintenances.index')->with('success', 'Berhasil menghapus data pemeliharaan.');
     }
-
+    
     /**
      * Approve the specified resource from storage.
-     */
-    public function approve(Maintenance $maintenance)
+    */
+    public function approve(Request $request, Maintenance $maintenance)
     {
-        if ($maintenance->status != 2) {
+        if ($maintenance->latest_status->status != 2) {
+            return redirect()->back()->with('error', 'Gagal menyetujui data pemeliharaan.');
+        }
+        
+        $data = $request->validate([
+            'note' => 'required|max:255',
+        ]);
+        
+        $result = $this->maintenanceService->approve($maintenance, $data, Auth::user()->id);
+        if (!$result) {
             return redirect()->back()->with('error', 'Gagal menyetujui data pemeliharaan.');
         }
 
-        return redirect()->route('maintenances.index')->with('success', 'Berhasil menghapus data pemeliharaan.');
+        return redirect()->route('maintenances.index')->with('success', 'Berhasil menyetujui data pemeliharaan.');
     }
-
+    
     /**
      * Reject the specified resource from storage.
-     */
+    */
     public function reject(Request $request, Maintenance $maintenance)
     {
-        if ($maintenance->status != 2) {
+        if ($maintenance->latest_status->status != 2) {
             return redirect()->back()->with('error', 'Gagal menolak data pemeliharaan.');
         }
-
-        $data = $request->validate([
-            'feedback' => 'required|max:255',
-        ]);
         
-        $deleted = $this->maintenanceService->delete($maintenance);
-        if (!$deleted) {
-            return redirect()->back()->with('error', 'Gagal menghapus data pemeliharaan.');
-        }
+        $data = $request->validate([
+            'note' => 'required|max:255',
+        ]);
 
-        return redirect()->route('maintenances.index')->with('success', 'Berhasil menghapus data pemeliharaan.');
+        $result = $this->maintenanceService->reject($maintenance, $data, Auth::user()->id);
+        if (!$result) {
+            return redirect()->back()->with('error', 'Gagal menolak data pemeliharaan.');
+        }
+    
+        return redirect()->route('maintenances.index')->with('success', 'Berhasil menolak data pemeliharaan.');
     }
 }

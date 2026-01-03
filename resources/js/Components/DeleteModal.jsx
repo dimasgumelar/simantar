@@ -43,3 +43,46 @@ export default function DeleteModal({
         </dialog>
     );
 }
+
+export function ConfirmModal({
+    modalRef,
+    onCancel,
+    onConfirm,
+    title = "",
+    isLoading = false,
+    labelButton = "",
+    detail = "",
+}) {
+    return (
+        <dialog ref={modalRef} className="modal" id="delete_modal">
+            <div className="modal-box">
+                <h3 className="font-bold text-lg">
+                    Apakah Anda yakin {title}?
+                </h3>
+                {detail != "" && <p className="py-4">{detail}</p>}
+                <div className="modal-action">
+                    <button onClick={onCancel} className="btn">
+                        Batal
+                    </button>
+                    <button
+                        onClick={onConfirm}
+                        className="btn btn-primary"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <span className="loading loading-spinner"></span>
+                                Tunggu...
+                            </>
+                        ) : (
+                            labelButton
+                        )}
+                    </button>
+                </div>
+            </div>
+            <form method="dialog" className="modal-backdrop">
+                <button>tutup</button>
+            </form>
+        </dialog>
+    );
+}

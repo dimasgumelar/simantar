@@ -29,10 +29,26 @@ export default function Dashboard({ maintenance, task }) {
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
+            {(role.hasAdmin || role.hasKetuaTim || role.hasTeknisi) && (
+                <Link href={route("maintenances.index")}>
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h2 className="card-title">Pemeliharan</h2>
+                            <div className="stats shadow">
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Menunggu</div>
+                                    <div className="stat-value text-primary">
+                                        {maintenance.pending}
+                                    </div>
+                                </div>
+>>>>>>> 0f9cf0dc8c41caec251da3251f08e200e038425e
 
             {/* ================= MENU UTAMA (GRID) ================= */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
+<<<<<<< HEAD
                 {/* ================= PEMELIHARAAN ================= */}
                 {(role.hasAdmin || role.hasKetuaTim || role.hasTeknisi) && (
                     <Link href={route("maintenances.index")}>
@@ -68,12 +84,50 @@ export default function Dashboard({ maintenance, task }) {
                                         <div className="stat-value text-success">
                                             {maintenance.completed}
                                         </div>
+=======
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Selesai</div>
+                                    <div className="stat-value text-info">
+                                        {maintenance.completed}
+>>>>>>> 0f9cf0dc8c41caec251da3251f08e200e038425e
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Ditolak</div>
+                                    <div className="stat-value text-error">
+                                        {maintenance.rejected}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Disetujui</div>
+                                    <div className="stat-value text-success">
+                                        {maintenance.approved}
                                     </div>
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
                     </Link>
                 )}
+=======
+                    </div>
+                </Link>
+            )}
+            {(role.hasTeknisi || role.hasOperator) && (
+                <Link href={route("tasks.index")}>
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h2 className="card-title">Task</h2>
+                            <div className="stats shadow">
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Menunggu</div>
+                                    <div className="stat-value text-primary">
+                                        {task.pending}
+                                    </div>
+                                </div>
+>>>>>>> 0f9cf0dc8c41caec251da3251f08e200e038425e
 
                 {/* ================= TASK ================= */}
                 {(role.hasTeknisi || role.hasOperator) && (
@@ -84,6 +138,7 @@ export default function Dashboard({ maintenance, task }) {
                                     Task
                                 </h2>
 
+<<<<<<< HEAD
                                 <div className="stats shadow mt-2">
                                     <div className="stat place-items-center">
                                         <div className="stat-title">
@@ -110,6 +165,26 @@ export default function Dashboard({ maintenance, task }) {
                                         <div className="stat-value text-success">
                                             {task.completed}
                                         </div>
+=======
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Selesai</div>
+                                    <div className="stat-value text-info">
+                                        {task.completed}
+>>>>>>> 0f9cf0dc8c41caec251da3251f08e200e038425e
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Ditolak</div>
+                                    <div className="stat-value text-error">
+                                        {task.rejected}
+                                    </div>
+                                </div>
+
+                                <div className="stat place-items-center">
+                                    <div className="stat-title">Disetujui</div>
+                                    <div className="stat-value text-success">
+                                        {task.approved}
                                     </div>
                                 </div>
                             </div>

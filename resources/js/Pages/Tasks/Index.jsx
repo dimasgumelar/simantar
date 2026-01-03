@@ -192,12 +192,12 @@ export default function TasksIndex({ maintenances }) {
                                                 <td>
                                                     <BadgeStatus
                                                         param={
-                                                            maintenance.status
+                                                            maintenance.latest_status
                                                         }
                                                     />
                                                 </td>
                                                 <td className="flex flex-wrap justify-center items-center gap-2">
-                                                    {maintenance.status ==
+                                                    {maintenance.latest_status ==
                                                         0 && (
                                                         <button
                                                             key={maintenance.id}
@@ -226,7 +226,7 @@ export default function TasksIndex({ maintenances }) {
                                                             </span>
                                                         </button>
                                                     )}
-                                                    {maintenance.status !=
+                                                    {maintenance.latest_status !=
                                                         0 && (
                                                         <Link
                                                             href={route(

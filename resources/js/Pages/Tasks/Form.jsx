@@ -18,6 +18,7 @@ export default function MaintenancesForm({
     inventory = {},
     feedbacks = [],
     isEdit = false,
+    status_histories = [],
 }) {
     const breadcrumbs = [<BreadcrumbsTasks />, isEdit ? "Ubah" : "Lihat"];
 
@@ -33,7 +34,10 @@ export default function MaintenancesForm({
     const modalRef = useRef(null);
     const fileInputRef = useRef(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [loadingId, setLoadingId] = useState(null);
+    const lastStatus =
+        status_histories?.length > 0
+            ? status_histories[status_histories.length - 1].status
+            : null;
 
     const onFileChange = (e) => {
         const file = e.target.files[0];
@@ -174,9 +178,61 @@ export default function MaintenancesForm({
                                 <tr>
                                     <th>Status</th>
                                     <td>
-                                        <BadgeStatus
-                                            param={maintenance.status}
-                                        />
+                                        <div className="collapse collapse-arrow bg-base-100 border-base-300 border">
+                                            <input type="checkbox" />
+                                            <div className="collapse-title font-semibold">
+                                                <BadgeStatus
+                                                    param={lastStatus}
+                                                />
+                                            </div>
+                                            <div className="collapse-content text-sm">
+                                                <ul className="list bg-base-100 rounded-box shadow-md">
+                                                    <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+                                                        {status_histories.length <
+                                                            1 && "Tidak Ada "}
+                                                        Riwayat Status
+                                                    </li>
+                                                    {status_histories.map(
+                                                        (
+                                                            status_history,
+                                                            index
+                                                        ) => (
+                                                            <li
+                                                                className="list-row"
+                                                                key={index}
+                                                            >
+                                                                <div className="items-center">
+                                                                    <BadgeStatus
+                                                                        param={
+                                                                            status_history.status
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        {
+                                                                            status_history
+                                                                                .user
+                                                                                .name
+                                                                        }
+                                                                    </div>
+                                                                    <div className="text-xs font-semibold opacity-60">
+                                                                        {parseDateTime(
+                                                                            status_history.created_at
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <p className="list-col-wrap text-xs">
+                                                                    {
+                                                                        status_history.note
+                                                                    }
+                                                                </p>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -196,31 +252,18 @@ export default function MaintenancesForm({
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Waktu Dalam Proses</th>
-                                    <td>
-                                        {parseDateTime(
-                                            maintenance.inprogress_at
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Waktu Selesai</th>
-                                    <td>
-                                        {parseDateTime(
-                                            maintenance.completed_at
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
                                     <th colSpan="2">
                                         <div className="mb-2">
-                                            Media - Upload dokumen gambar atau
-                                            video dari kondisi awal, kegiatan,
-                                            dan hasil akhir (
-                                            {uploadedFiles.length}/5)
+                                            Media{" "}
+                                            {(lastStatus == 1 ||
+                                                lastStatus == 3) &&
+                                                " - Upload dokumen gambar atau video dari kondisi awal, kegiatan, dan hasil akhir (" +
+                                                    uploadedFiles.length +
+                                                    "/5)"}{" "}
                                         </div>
                                         {uploadedFiles.length < 5 &&
-                                            maintenance.status < 2 && (
+                                            (lastStatus < 2 ||
+                                                lastStatus == 3) && (
                                                 <form
                                                     onSubmit={handleSubmit}
                                                     className="space-y-4 mt-2"
@@ -278,7 +321,8 @@ export default function MaintenancesForm({
                                                 key={i}
                                             >
                                                 <div className="flex items-center mr-5">
-                                                    {maintenance.status < 2 && (
+                                                    {(lastStatus < 2 ||
+                                                        lastStatus == 3) && (
                                                         <>
                                                             <button
                                                                 type="button"
@@ -352,23 +396,9 @@ export default function MaintenancesForm({
                                     </th>
                                 </tr>
                                 <tr>
-                                    {maintenance.status == 2 && (
-                                        <>
-                                            <th className="text-start">
-                                                Laporan Pemeliharan
-                                            </th>
-                                            <td>
-                                                {showValueOrDash(
-                                                    maintenance.feedback
-                                                )}
-                                            </td>
-                                        </>
-                                    )}
-                                </tr>
-                                <tr>
                                     <td colSpan={2}>
                                         <form onSubmit={handleComplete}>
-                                            {maintenance.status != 2 && (
+                                            {lastStatus != 2 && (
                                                 <Input
                                                     label="Laporan Pemeliharaan"
                                                     isRequired={true}
@@ -383,12 +413,11 @@ export default function MaintenancesForm({
                                                         )
                                                     }
                                                     error={errors.feedback}
-                                                    disabled={
-                                                        maintenance.status == 2
-                                                    }
+                                                    disabled={lastStatus == 2}
                                                 />
                                             )}
-                                            {maintenance.status == 1 && (
+                                            {(lastStatus == 1 ||
+                                                lastStatus == 3) && (
                                                 <FormButtonSubmit
                                                     backRoute={route(
                                                         "tasks.index"
@@ -400,13 +429,11 @@ export default function MaintenancesForm({
                                                     buttonColor="bg-success"
                                                     text="Selesai"
                                                     icon={<FaCheck />}
-                                                    isSubmit={
-                                                        maintenance.status != 2
-                                                    }
+                                                    isSubmit={lastStatus != 2}
                                                     isLoading={processing}
                                                 />
                                             )}
-                                            {maintenance.status == 0 && (
+                                            {lastStatus == 0 && (
                                                 <FormButtonFunction
                                                     backRoute={route(
                                                         "tasks.index"

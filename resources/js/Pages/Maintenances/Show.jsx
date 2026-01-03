@@ -1,13 +1,14 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import React, { useState } from "react";
-import { Head, Link } from "@inertiajs/react";
+import React, { useRef, useState } from "react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import Breadcrumbs from "@/Components/Breadcrumbs";
 import { BadgeStatus } from "@/Components/Badge";
-import { FormButtonFunction } from "@/Components/FormButton";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaArrowLeft } from "react-icons/fa";
 import { BreadcrumbsMaintenances } from "@/Pages/Maintenances/Constant";
 import { parseDateTime, showValueOrDash } from "@/utils/helper-function";
 import { FileModal } from "@/Components/Modal";
+import { Input } from "@/Components/FormInput";
+import { ConfirmModal } from "@/Components/DeleteModal";
 
 export default function MaintenancesShow({
     maintenance = {},
@@ -16,20 +17,74 @@ export default function MaintenancesShow({
     user_maintenance = {},
     feedbacks = [],
     created_by_user = {},
+    status_histories = [],
 }) {
+    const { data, setData, post, processing, errors } = useForm({
+        note: null,
+    });
+    const modalRef = useRef(null);
     const breadcrumbs = [<BreadcrumbsMaintenances />, "Lihat"];
     const [selectedFile, setSelectedFile] = useState(null);
+    const [confirmConfig, setConfirmConfig] = useState({
+        title: "",
+        labelButton: "",
+        detail: "",
+        isApprove: false,
+    });
+    const lastStatus =
+        status_histories?.length > 0
+            ? status_histories[status_histories.length - 1].status
+            : null;
 
-    function handleApproveMaintenance() {
-        setLoadingId(maintenance.id);
-        post(route("tasks.start", maintenance.id), {
-            preserveScroll: true,
-            onFinish: () => setLoadingId(null), // reset setelah selesai
-            onError: () => {
-                alert("Gagal menyetujui pemeliharan.");
-                setLoadingId(null);
-            },
+    const handleComplete = (e) => {
+        e.preventDefault();
+        setData("file", null);
+        setData("description", "");
+        post(route("tasks.complete", maintenance.id));
+    };
+
+    function handleConfirm() {
+        if (confirmConfig.isApprove) {
+            post(route("maintenances.approve", maintenance.id), {
+                onSuccess: () => {
+                    closeConfirmModal();
+                },
+                onError: () => {
+                    closeConfirmModal();
+                },
+            });
+        } else {
+            post(route("maintenances.reject", maintenance.id), {
+                onSuccess: () => {
+                    closeConfirmModal();
+                },
+                onError: () => {
+                    closeConfirmModal();
+                },
+            });
+        }
+    }
+
+    function openRejectModal() {
+        setConfirmConfig({
+            title: "menolak data pemeliharaan",
+            labelButton: "Tolak",
+            isApprove: false,
         });
+        modalRef.current.showModal();
+    }
+
+    function openApproveModal() {
+        setConfirmConfig({
+            title: "menyetujui data pemeliharaan",
+            labelButton: "Setujui",
+            isApprove: true,
+        });
+        modalRef.current.showModal();
+    }
+
+    function closeConfirmModal() {
+        modalRef.current.close();
     }
 
     return (
@@ -38,7 +93,17 @@ export default function MaintenancesShow({
 
             <div className="card bg-base-100 shadow-sm w-full">
                 <div className="card-body">
-                    <Breadcrumbs list={breadcrumbs} />
+                    <div className="grid">
+                        <Breadcrumbs list={breadcrumbs} />
+                        <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={() => openApproveModal()}
+                        >
+                            <FaCheck />
+                            <span className="hidden sm:flex">Setujui</span>
+                        </button>
+                    </div>
                     <div className="overflow-x-auto">
                         <table className="table">
                             <thead>
@@ -81,9 +146,61 @@ export default function MaintenancesShow({
                                 <tr>
                                     <th>Status</th>
                                     <td>
-                                        <BadgeStatus
-                                            param={maintenance.status}
-                                        />
+                                        <div className="collapse collapse-arrow bg-base-100 border-base-300 border">
+                                            <input type="checkbox" />
+                                            <div className="collapse-title font-semibold">
+                                                <BadgeStatus
+                                                    param={lastStatus}
+                                                />
+                                            </div>
+                                            <div className="collapse-content text-sm">
+                                                <ul className="list bg-base-100 rounded-box shadow-md">
+                                                    <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+                                                        {status_histories.length <
+                                                            1 && "Tidak Ada "}
+                                                        Riwayat Status
+                                                    </li>
+                                                    {maintenance.status_histories.map(
+                                                        (
+                                                            status_history,
+                                                            index
+                                                        ) => (
+                                                            <li
+                                                                className="list-row"
+                                                                key={index}
+                                                            >
+                                                                <div className="items-center">
+                                                                    <BadgeStatus
+                                                                        param={
+                                                                            status_history.status
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        {
+                                                                            status_history
+                                                                                .user
+                                                                                .name
+                                                                        }
+                                                                    </div>
+                                                                    <div className="text-xs font-semibold opacity-60">
+                                                                        {parseDateTime(
+                                                                            status_history.created_at
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <p className="list-col-wrap text-xs">
+                                                                    {
+                                                                        status_history.note
+                                                                    }
+                                                                </p>
+                                                            </li>
+                                                        )
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -99,22 +216,6 @@ export default function MaintenancesShow({
                                     <td>
                                         {parseDateTime(
                                             maintenance.scheduled_at
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Waktu Dalam Proses</th>
-                                    <td>
-                                        {parseDateTime(
-                                            maintenance.inprogress_at
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Waktu Selesai</th>
-                                    <td>
-                                        {parseDateTime(
-                                            maintenance.completed_at
                                         )}
                                     </td>
                                 </tr>
@@ -172,36 +273,84 @@ export default function MaintenancesShow({
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th className="text-start">
-                                        Laporan Pemeliharaan
-                                    </th>
-                                    <td>
-                                        {showValueOrDash(maintenance.feedback)}
+                                    <td colSpan={2}>
+                                        <form onSubmit={handleComplete}>
+                                            {lastStatus == 2 && (
+                                                <Input
+                                                    label="Catatan"
+                                                    isRequired={true}
+                                                    className="mb-2"
+                                                    type="text"
+                                                    placeholder="Catatan"
+                                                    value={data.note}
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "note",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    error={errors.note}
+                                                />
+                                            )}
+                                            <div className="flex justify-end mt-2">
+                                                <Link
+                                                    href={route(
+                                                        "maintenances.index"
+                                                    )}
+                                                    className="btn btn-secondary"
+                                                >
+                                                    <FaArrowLeft />
+                                                    <span className="hidden sm:flex">
+                                                        Kembali
+                                                    </span>
+                                                </Link>
+                                                {lastStatus == 2 && (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-error ml-2"
+                                                            onClick={() =>
+                                                                openRejectModal()
+                                                            }
+                                                        >
+                                                            <FaCheck />
+                                                            <span className="hidden sm:flex">
+                                                                Tolak
+                                                            </span>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-success ml-2"
+                                                            onClick={() =>
+                                                                openApproveModal()
+                                                            }
+                                                        >
+                                                            <FaCheck />
+                                                            <span className="hidden sm:flex">
+                                                                Setujui
+                                                            </span>
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </form>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <FormButtonFunction
-                            backRoute={route("maintenances.index")}
-                            text="Setujui"
-                            icon={<FaCheck />}
-                            buttonColor="btn-success"
-                            onClick={handleApproveMaintenance}
-                            isButton={maintenance.status == 2}
-                        />
-                        {/* <FormButtonFunction
-                            backRoute={route("tasks.index")}
-                            route={route("tasks.start", maintenance.id)}
-                            buttonColor="bg-success"
-                            text="Mulai"
-                            icon={<FaPlay />}
-                            isLoading={processing}
-                            onClick={handleStartTask}
-                        /> */}
                     </div>
                 </div>
             </div>
             <FileModal selectedFile={selectedFile} />
+            <ConfirmModal
+                modalRef={modalRef}
+                onCancel={closeConfirmModal}
+                onConfirm={handleConfirm}
+                isLoading={processing}
+                title={confirmConfig.title}
+                labelButton={confirmConfig.labelButton}
+                detail={confirmConfig.detail}
+            />
         </AuthenticatedLayout>
     );
 }

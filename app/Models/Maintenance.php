@@ -46,4 +46,14 @@ class Maintenance extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function status_histories()
+    {
+        return $this->hasMany(MaintenanceStatusHistory::class);
+    }
+
+    public function latest_status()
+    {
+        return $this->hasOne(MaintenanceStatusHistory::class)->latestOfMany();
+    }
 }

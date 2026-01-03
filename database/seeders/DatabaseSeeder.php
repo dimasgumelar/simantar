@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             InventorySeeder::class,
             MaintenanceSeeder::class,
+            MaintenanceStatusHistorySeeder::class,
             UserTransmissionSeeder::class,
         ]);    
     }

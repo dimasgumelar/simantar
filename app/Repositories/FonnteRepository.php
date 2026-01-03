@@ -16,12 +16,6 @@ class FonnteRepository
             'countryCode' => $countryCode,
         ]);
 
-        // if ($response->successful()) {
-        //     dd($response->json());
-        // } else {
-        //     dd($response->status(), $response->body());
-        // }
-
         return $response;
     }
 }
