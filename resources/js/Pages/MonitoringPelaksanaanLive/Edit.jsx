@@ -26,7 +26,7 @@ export default function Edit({ monitoring }) {
         return "";
     };
 
-    // State untuk form - SAMA seperti Index.jsx tapi dengan data dari props
+    // State untuk form - SAMA seperti Index.jsx 
     const { data, setData, put, processing, reset } = useForm({
         tanggal_pelaksanaan: monitoring.tanggal_pelaksanaan,
         nama_acara: monitoring.nama_acara || "",
