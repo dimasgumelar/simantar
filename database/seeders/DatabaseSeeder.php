@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             MaintenanceSeeder::class,
             MaintenanceStatusHistorySeeder::class,
             UserTransmissionSeeder::class,
-        ]);    
+            MasterPeralatanSeeder::class,
+        ]);
     }
 }

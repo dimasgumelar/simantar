@@ -1,6 +1,7 @@
 import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { DEFAULT_IMAGE } from "@/utils/constants";
+import { router } from "@inertiajs/react";
 
 export function Input({
     isRequired = false,
@@ -200,6 +201,146 @@ export function InputDropdownManual({
                                         });
                                         setIsOpen(false);
                                         setSearch("");
+                                    }}
+                                >
+                                    {item[labelKey]}
+                                </li>
+                            ))
+                        ) : (
+                            <li className="px-3 py-2 text-sm">
+                                Tidak ada data yang ditemukan
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            )}
+
+            {error && <div className="text-error text-sm mt-1">{error}</div>}
+        </div>
+    );
+}
+
+export function InputDropdownManualServer({
+    isRequired = false,
+    label,
+    value,
+    onChange,
+    error,
+    disabled = false,
+    list = [],
+    idKey = "id",
+    labelKey = "name",
+    serverSearch = false,
+    searchParam = "",
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [search, setSearch] = useState("");
+    const dropdownRef = useRef(null);
+    const [selectedLabel, setSelectedLabel] = useState("Pilih...");
+
+    const filteredList = serverSearch
+        ? list
+        : list.filter((item) =>
+              item[labelKey].toLowerCase().includes(search.toLowerCase())
+          );
+
+    // const selectedLabel =
+    //     list.find((item) => item[idKey] === value)?.[labelKey] || "Pilih...";
+
+    // Tutup dropdown saat klik di luar
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        if (!serverSearch) return;
+        // if (value) return; // ⬅ STOP setelah dipilih
+        if (search.length < 2) return;
+
+        const timeout = setTimeout(() => {
+            router.get(
+                route(route().current()),
+                { [searchParam]: search },
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    replace: true,
+                }
+            );
+        }, 500); // debounce 500ms
+
+        return () => clearTimeout(timeout);
+    }, [search]);
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            <label className="label block mb-2">
+                {label}
+                {isRequired && <span className="text-red-500"> *</span>}
+            </label>
+
+            <div
+                className={`input input-bordered w-full flex justify-between items-center cursor-pointer ${
+                    disabled ? "opacity-50 pointer-events-none" : ""
+                }`}
+                onClick={() => setIsOpen((prev) => !prev)}
+            >
+                <span>{selectedLabel}</span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`w-4 h-4 transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                    />
+                </svg>
+            </div>
+
+            {isOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-base-200 max-h-60 overflow-auto">
+                    <input
+                        type="text"
+                        placeholder="Cari..."
+                        className="input input-sm input-bordered w-full rounded-none"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        autoFocus
+                    />
+                    <ul>
+                        {filteredList.length > 0 ? (
+                            filteredList.map((item) => (
+                                <li
+                                    key={item[idKey]}
+                                    className={`px-3 py-2 cursor-pointer hover:bg-primary ${
+                                        value === item[idKey]
+                                            ? "bg-primary"
+                                            : ""
+                                    }`}
+                                    onClick={() => {
+                                        onChange({
+                                            target: { value: item[idKey] },
+                                        });
+                                        setIsOpen(false);
+                                        setSelectedLabel(item[labelKey]);
+                                        setSearch(item[labelKey]);
                                     }}
                                 >
                                     {item[labelKey]}

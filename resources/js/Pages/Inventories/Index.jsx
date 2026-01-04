@@ -226,7 +226,7 @@ export default function InventoriesIndex({ inventories }) {
                 modalRef={modalRef}
                 onCancel={closeDeleteModal}
                 onConfirm={handleDelete}
-                title="inventory"
+                title="kategori"
                 isDeleting={processing}
             />
         </AuthenticatedLayout>

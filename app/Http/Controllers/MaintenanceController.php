@@ -83,8 +83,8 @@ class MaintenanceController extends Controller
             foreach ($maintenances as $maintenance) {
                 $filePath = "";
                 foreach ($maintenance->feedbacks as $key => $feedback) {
-                    $filePath .= $feedback->description.":\n";
-                    $filePath .= config('app.url')."/storage/".$feedback->file_path."\n";
+                    $filePath .= $feedback->description . ":\n";
+                    $filePath .= config('app.url') . "/storage/" . $feedback->file_path . "\n";
                 }
                 $status = "";
                 switch ($maintenance->status) {
@@ -141,7 +141,7 @@ class MaintenanceController extends Controller
         // }
 
         $users = $this->userTransmissionService->getAllByTransmissionId($transmissionId, 0, 'name', 'asc');
-        
+
         $maintenance = new Maintenance();
         $maintenance->transmission_id = $transmissionId ?? $transmissions[0]->id;
         if ($inventories->isNotEmpty()) {
@@ -176,7 +176,7 @@ class MaintenanceController extends Controller
         ]);
 
         $data["created_by"] = Auth::user()->id;
-        
+
         $maintenance = $this->maintenanceService->create($data);
         if (!$maintenance) {
             return redirect()->back()->with('error', 'Gagal menambah pemeliharaan.');
@@ -222,7 +222,7 @@ class MaintenanceController extends Controller
         if (Auth::user()->hasRole('teknisi') && Auth::user()->id != $maintenance->created_by) {
             return redirect()->route('maintenances.index')->with('error', 'Data pemeliharaan tidak ditemukan.');
         }
-        
+
         $transmissions = $this->transmissionService->getAll(null, null, null, 0, 'id', 'asc');
         if ($transmissions->isEmpty()) {
             return redirect()->route('transmissions.create')->with('warning', 'Silakan menambah transmisi sebelum menambah data pemeliharaan.');
@@ -230,9 +230,9 @@ class MaintenanceController extends Controller
 
         $transmissionId = $request->input('transmission_id', $maintenance->transmission->id);
         $maintenance->transmission_id = $transmissionId;
-        
+
         $inventories = $this->inventoryService->getAll($transmissionId, null, 0, 'id', 'asc');
-        
+
         $users = $this->userTransmissionService->getAllByTransmissionId($transmissionId, 0, 'name', 'asc');
         if ($maintenance->transmission_id != $maintenance->transmission->id) {
             if (count($users) > 0) {
@@ -289,23 +289,23 @@ class MaintenanceController extends Controller
         if (!$deleted) {
             return redirect()->back()->with('error', 'Gagal menghapus data pemeliharaan.');
         }
-        
+
         return redirect()->route('maintenances.index')->with('success', 'Berhasil menghapus data pemeliharaan.');
     }
-    
+
     /**
      * Approve the specified resource from storage.
-    */
+     */
     public function approve(Request $request, Maintenance $maintenance)
     {
         if ($maintenance->latest_status->status != 2) {
             return redirect()->back()->with('error', 'Gagal menyetujui data pemeliharaan.');
         }
-        
+
         $data = $request->validate([
             'note' => 'required|max:255',
         ]);
-        
+
         $result = $this->maintenanceService->approve($maintenance, $data, Auth::user()->id);
         if (!$result) {
             return redirect()->back()->with('error', 'Gagal menyetujui data pemeliharaan.');
@@ -313,16 +313,16 @@ class MaintenanceController extends Controller
 
         return redirect()->route('maintenances.index')->with('success', 'Berhasil menyetujui data pemeliharaan.');
     }
-    
+
     /**
      * Reject the specified resource from storage.
-    */
+     */
     public function reject(Request $request, Maintenance $maintenance)
     {
         if ($maintenance->latest_status->status != 2) {
             return redirect()->back()->with('error', 'Gagal menolak data pemeliharaan.');
         }
-        
+
         $data = $request->validate([
             'note' => 'required|max:255',
         ]);
@@ -331,7 +331,7 @@ class MaintenanceController extends Controller
         if (!$result) {
             return redirect()->back()->with('error', 'Gagal menolak data pemeliharaan.');
         }
-    
+
         return redirect()->route('maintenances.index')->with('success', 'Berhasil menolak data pemeliharaan.');
     }
 }
