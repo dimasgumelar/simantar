@@ -164,7 +164,7 @@ export default function Sidebar({
             roles: ["admin", "ketua tim", "teknisi", "operator"],
             list: [
                 {
-                    label: "Monitoering Alat",
+                    label: "Monitoring Alat",
                     icon: <FaTools />,
                     routeStr: "categories.index",
                     roles: ["admin", "ketua tim", "teknisi", "operator"],
