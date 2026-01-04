@@ -141,7 +141,7 @@ export default function Sidebar({
                 {
                     label: "Maintenance TX",
                     icon: <FaTools />,
-                    routeStr: "categories.index",
+                    routeStr: "transmissionmaintenance.index",
                     roles: ["admin", "ketua tim", "teknisi", "operator"],
                 },
                 {
