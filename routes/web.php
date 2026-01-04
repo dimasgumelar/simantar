@@ -18,6 +18,9 @@ use App\Models\MasterDetailPeralatanMaintenance;
 use App\Models\MasterPeralatanMaintenance;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\MonitoringSiaranController;
+use App\Http\Controllers\MonitoringPelaksanaanLiveController;
+use App\Http\Controllers\MonitoringLiveController;
 
 
 Route::get('/', function () {
@@ -129,5 +132,221 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::post('/categories/{category}/delete', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
+
+Route::middleware(['auth'])->group(function () {
+
+    // HALAMAN FORM INPUT
+    Route::get('/monitoring-siaran/create', [MonitoringSiaranController::class, 'create'])
+        ->name('monitoring-siaran.create');
+
+    // LIST + FILTER (SEMUA DATA)
+    Route::get('/monitoring-siaran', [MonitoringSiaranController::class, 'index'])
+        ->name('monitoring-siaran.index');
+
+    // DATA SAYA
+    Route::get('/monitoring-siaran/my-data', [MonitoringSiaranController::class, 'myData'])
+        ->name('monitoring-siaran.my-data');
+     // FORM EDIT - 
+    Route::get('/monitoring-siaran/{monitoringSiaran}/edit', [MonitoringSiaranController::class, 'edit'])
+        ->name('monitoring-siaran.edit');
+
+    // SIMPAN
+    Route::post('/monitoring-siaran', [MonitoringSiaranController::class, 'store'])
+        ->name('monitoring-siaran.store');
+
+    // UPDATE
+    Route::put('/monitoring-siaran/{monitoringSiaran}', [MonitoringSiaranController::class, 'update'])
+        ->name('monitoring-siaran.update');
+
+    // DELETE
+    Route::delete('/monitoring-siaran/{monitoringSiaran}', [MonitoringSiaranController::class, 'destroy'])
+        ->name('monitoring-siaran.destroy');
+
+    // EXPORT
+    Route::get('/monitoring-siaran-export/csv', [MonitoringSiaranController::class, 'exportCsv'])
+        ->name('monitoring-siaran.export.csv');
+
+    Route::get('/monitoring-siaran-export/pdf', [MonitoringSiaranController::class, 'exportPdf'])
+        ->name('monitoring-siaran.export.pdf');
+        
+   // ================= MONITORING LIVE ROUTES =================
+    Route::prefix('monitoring-live')->group(function () {
+        // Form input
+        Route::get('/create', [MonitoringLiveController::class, 'create'])
+            ->name('monitoring-live.create');
+        
+        // List semua data + filter
+        Route::get('/', [MonitoringLiveController::class, 'index'])
+            ->name('monitoring-live.index');
+        
+        // Data saya
+        Route::get('/my-data', [MonitoringLiveController::class, 'myData'])
+            ->name('monitoring-live.my-data');
+        
+        // Form edit
+        Route::get('/{monitoringLive}/edit', [MonitoringLiveController::class, 'edit'])
+            ->name('monitoring-live.edit');
+        
+        // Simpan data
+        Route::post('/', [MonitoringLiveController::class, 'store'])
+            ->name('monitoring-live.store');
+        
+        // Update data
+        Route::put('/{monitoringLive}', [MonitoringLiveController::class, 'update'])
+            ->name('monitoring-live.update');
+        
+        // Hapus data
+        Route::delete('/{monitoringLive}', [MonitoringLiveController::class, 'destroy'])
+            ->name('monitoring-live.destroy');
+        
+        // Export
+        Route::get('/export/csv', [MonitoringLiveController::class, 'exportCsv'])
+            ->name('monitoring-live.export.csv');
+    });
+
+    // ================= MONITORING PELAKSANAAN LIVE ROUTES =================
+    Route::prefix('monitoring-pelaksanaan-live')->group(function () {
+        // Form input
+        Route::get('/create', [MonitoringPelaksanaanLiveController::class, 'create'])
+            ->name('monitoring-pelaksanaan-live.create');
+        
+        // List semua data + filter
+        Route::get('/', [MonitoringPelaksanaanLiveController::class, 'index'])
+            ->name('monitoring-pelaksanaan-live.index');
+        
+        // Data saya
+        Route::get('/my-data', [MonitoringPelaksanaanLiveController::class, 'myData'])
+            ->name('monitoring-pelaksanaan-live.my-data');
+        
+        // Form edit
+        Route::get('/{monitoringPelaksanaanLive}/edit', [MonitoringPelaksanaanLiveController::class, 'edit'])
+            ->name('monitoring-pelaksanaan-live.edit');
+        
+        // Simpan data
+        Route::post('/', [MonitoringPelaksanaanLiveController::class, 'store'])
+            ->name('monitoring-pelaksanaan-live.store');
+        
+        // Update data
+        Route::put('/{monitoringPelaksanaanLive}', [MonitoringPelaksanaanLiveController::class, 'update'])
+            ->name('monitoring-pelaksanaan-live.update');
+        
+        // Hapus data
+        Route::delete('/{monitoringPelaksanaanLive}', [MonitoringPelaksanaanLiveController::class, 'destroy'])
+            ->name('monitoring-pelaksanaan-live.destroy');
+        
+        // Export
+        Route::get('/export/csv', [MonitoringPelaksanaanLiveController::class, 'exportCsv'])
+            ->name('monitoring-pelaksanaan-live.export.csv');
+    });
+});
+
+
+Route::middleware(['auth'])->group(function () {
+
+    // HALAMAN FORM INPUT
+    Route::get('/monitoring-siaran/create', [MonitoringSiaranController::class, 'create'])
+        ->name('monitoring-siaran.create');
+
+    // LIST + FILTER (SEMUA DATA)
+    Route::get('/monitoring-siaran', [MonitoringSiaranController::class, 'index'])
+        ->name('monitoring-siaran.index');
+
+    // DATA SAYA
+    Route::get('/monitoring-siaran/my-data', [MonitoringSiaranController::class, 'myData'])
+        ->name('monitoring-siaran.my-data');
+     // FORM EDIT - 
+    Route::get('/monitoring-siaran/{monitoringSiaran}/edit', [MonitoringSiaranController::class, 'edit'])
+        ->name('monitoring-siaran.edit');
+
+    // SIMPAN
+    Route::post('/monitoring-siaran', [MonitoringSiaranController::class, 'store'])
+        ->name('monitoring-siaran.store');
+
+    // UPDATE
+    Route::put('/monitoring-siaran/{monitoringSiaran}', [MonitoringSiaranController::class, 'update'])
+        ->name('monitoring-siaran.update');
+
+    // DELETE
+    Route::delete('/monitoring-siaran/{monitoringSiaran}', [MonitoringSiaranController::class, 'destroy'])
+        ->name('monitoring-siaran.destroy');
+
+    // EXPORT
+    Route::get('/monitoring-siaran-export/csv', [MonitoringSiaranController::class, 'exportCsv'])
+        ->name('monitoring-siaran.export.csv');
+
+    Route::get('/monitoring-siaran-export/pdf', [MonitoringSiaranController::class, 'exportPdf'])
+        ->name('monitoring-siaran.export.pdf');
+        
+   // ================= MONITORING LIVE ROUTES =================
+    Route::prefix('monitoring-live')->group(function () {
+        // Form input
+        Route::get('/create', [MonitoringLiveController::class, 'create'])
+            ->name('monitoring-live.create');
+        
+        // List semua data + filter
+        Route::get('/', [MonitoringLiveController::class, 'index'])
+            ->name('monitoring-live.index');
+        
+        // Data saya
+        Route::get('/my-data', [MonitoringLiveController::class, 'myData'])
+            ->name('monitoring-live.my-data');
+        
+        // Form edit
+        Route::get('/{monitoringLive}/edit', [MonitoringLiveController::class, 'edit'])
+            ->name('monitoring-live.edit');
+        
+        // Simpan data
+        Route::post('/', [MonitoringLiveController::class, 'store'])
+            ->name('monitoring-live.store');
+        
+        // Update data
+        Route::put('/{monitoringLive}', [MonitoringLiveController::class, 'update'])
+            ->name('monitoring-live.update');
+        
+        // Hapus data
+        Route::delete('/{monitoringLive}', [MonitoringLiveController::class, 'destroy'])
+            ->name('monitoring-live.destroy');
+        
+        // Export
+        Route::get('/export/csv', [MonitoringLiveController::class, 'exportCsv'])
+            ->name('monitoring-live.export.csv');
+    });
+
+    // ================= MONITORING PELAKSANAAN LIVE ROUTES =================
+    Route::prefix('monitoring-pelaksanaan-live')->group(function () {
+        // Form input
+        Route::get('/create', [MonitoringPelaksanaanLiveController::class, 'create'])
+            ->name('monitoring-pelaksanaan-live.create');
+        
+        // List semua data + filter
+        Route::get('/', [MonitoringPelaksanaanLiveController::class, 'index'])
+            ->name('monitoring-pelaksanaan-live.index');
+        
+        // Data saya
+        Route::get('/my-data', [MonitoringPelaksanaanLiveController::class, 'myData'])
+            ->name('monitoring-pelaksanaan-live.my-data');
+        
+        // Form edit
+        Route::get('/{monitoringPelaksanaanLive}/edit', [MonitoringPelaksanaanLiveController::class, 'edit'])
+            ->name('monitoring-pelaksanaan-live.edit');
+        
+        // Simpan data
+        Route::post('/', [MonitoringPelaksanaanLiveController::class, 'store'])
+            ->name('monitoring-pelaksanaan-live.store');
+        
+        // Update data
+        Route::put('/{monitoringPelaksanaanLive}', [MonitoringPelaksanaanLiveController::class, 'update'])
+            ->name('monitoring-pelaksanaan-live.update');
+        
+        // Hapus data
+        Route::delete('/{monitoringPelaksanaanLive}', [MonitoringPelaksanaanLiveController::class, 'destroy'])
+            ->name('monitoring-pelaksanaan-live.destroy');
+        
+        // Export
+        Route::get('/export/csv', [MonitoringPelaksanaanLiveController::class, 'exportCsv'])
+            ->name('monitoring-pelaksanaan-live.export.csv');
+    });
+});
+
 
 require __DIR__ . '/auth.php';
