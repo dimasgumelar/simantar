@@ -243,6 +243,10 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
 
+    // HALAMAN HOME
+    Route::get('/monitoring-siaran/home', [MonitoringSiaranController::class, 'home'])
+        ->name('monitoring-siaran.home');
+
     // HALAMAN FORM INPUT
     Route::get('/monitoring-siaran/create', [MonitoringSiaranController::class, 'create'])
         ->name('monitoring-siaran.create');

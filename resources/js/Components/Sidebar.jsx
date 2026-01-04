@@ -118,20 +118,7 @@ export default function Sidebar({
             label: "Monitoring Siaran",
             icon: <FaTv />,
             roles: ["admin", "ketua tim", "teknisi", "operator"],
-            list: [
-                {
-                    label: "Harian",
-                    icon: <FaCalendarAlt />,
-                    routeStr: "categories.index",
-                    roles: ["admin", "ketua tim", "teknisi", "operator"],
-                },
-                {
-                    label: "Live",
-                    icon: <FaBroadcastTower />,
-                    routeStr: "inventories.index",
-                    roles: ["admin", "ketua tim", "teknisi", "operator"],
-                },
-            ],
+            routeStr: "monitoring-siaran.home",
         },
         {
             label: "Maintenance",

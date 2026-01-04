@@ -13,6 +13,14 @@ class MonitoringSiaranController extends Controller
     /**
      * FORM INPUT
      */
+    public function home()
+    {
+        return Inertia::render('MonitoringSiaran/Home');
+    }
+
+    /**
+     * FORM INPUT
+     */
     public function create()
     {
         return Inertia::render('MonitoringSiaran/Index');
