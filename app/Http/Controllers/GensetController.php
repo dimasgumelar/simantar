@@ -83,8 +83,31 @@ class GensetController extends Controller
         ]);
             $durasiMenit = $data['durasi'];
             $beban       = $data['beban_genset'];
- 
-            $faktorKonsumsi = 0.25; // sesuaikan dengan spesifikasi genset
+
+            $kapasitasGenset = 200;
+
+            // hitung persentase beban
+            $persentaseBeban = ($beban / $kapasitasGenset) * 100;
+
+            // tentukan faktor konsumsi
+            if ($persentaseBeban <=10) {
+                $faktorKonsumsi = 0.33;
+            } elseif ($persentaseBeban <= 20) {
+                $faktorKonsumsi = 0.30;
+            } elseif ($persentaseBeban <= 30) {
+                $faktorKonsumsi = 0.28;
+            } elseif ($persentaseBeban <= 40) {
+                $faktorKonsumsi = 0.27;
+            } elseif ($persentaseBeban <= 50) {
+                $faktorKonsumsi = 0.26;
+            } elseif ($persentaseBeban <= 60) {
+                $faktorKonsumsi = 0.25;
+            } elseif ($persentaseBeban <= 75) {
+                $faktorKonsumsi = 0.25;
+            } else {
+                $faktorKonsumsi = 0.27;
+            }
+
 
             $konsumsiBBM = ($durasiMenit / 60) * $beban * $faktorKonsumsi;
             $rumusBBM = "({$durasiMenit} / 60) × {$beban} × {$faktorKonsumsi}";
