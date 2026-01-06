@@ -49,6 +49,11 @@ export default function MaintenancesForm({
                 alert("Pilih file gambar atau video yang valid.");
                 return;
             }
+            if (file.size > 2097152) {
+                alert("Ukuran file maksimal 2 MB.");
+                e.target.value = null;
+                return;
+            }
             setData("file", file);
         } else {
             setData("file", null);

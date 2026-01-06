@@ -7,8 +7,8 @@ import { Input } from "@/Components/FormInput";
 
 export default function CategoriesForm({ category = {}, isEdit = false }) {
     const breadcrumbs = [
-        <Link href={route("categories.index")}>Categories</Link>,
-        isEdit ? "Edit" : "Create",
+        <Link href={route("categories.index")}>Kategori</Link>,
+        isEdit ? "Ubah" : "Tambah",
     ];
     const { data, setData, post, put, processing, errors } = useForm({
         id: "",
@@ -37,7 +37,7 @@ export default function CategoriesForm({ category = {}, isEdit = false }) {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Categories Create" />
+            <Head title="Tambah Kategori" />
 
             <div className="card bg-base-100 shadow-sm w-full">
                 <div className="card-body">
@@ -46,16 +46,16 @@ export default function CategoriesForm({ category = {}, isEdit = false }) {
                         <Input
                             isRequired={true}
                             type="text"
-                            label="Name"
-                            placeholder="Name"
+                            label="Nama"
+                            placeholder="Nama"
                             value={data.name}
                             onChange={(e) => setData("name", e.target.value)}
                             error={errors.name}
                         />
                         <Input
                             type="text"
-                            label="Description"
-                            placeholder="Description"
+                            label="Deskripsi"
+                            placeholder="Deskripsi"
                             value={data.description}
                             onChange={(e) =>
                                 setData("description", e.target.value)

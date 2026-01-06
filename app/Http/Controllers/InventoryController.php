@@ -9,6 +9,7 @@ use App\Services\InventoryService;
 use App\Services\TransmissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -30,6 +31,12 @@ class InventoryController extends Controller
      */
     public function index(Request $request)
     {
+        $transmissionIds = null;
+        $user = Auth::user();
+        if ($user->hasRole(['operator'])) {
+            $transmissionIds = $user->transmissions()->pluck('transmissions.id')->toArray();
+        }
+
         // Ambil input filter
         $search = $request->input('search');
         $perPage = $request->input('per_page', 10);
@@ -38,7 +45,7 @@ class InventoryController extends Controller
         $sortField = $request->input('sort', 'id');
         $sortDirection = $request->input('direction', 'asc');
 
-        $inventories = $this->inventoryService->getAll(null, $search, $perPage, $sortField, $sortDirection);
+        $inventories = $this->inventoryService->getAll($transmissionIds, $search, $perPage, $sortField, $sortDirection);
 
         return Inertia::render('Inventories/Index', compact('inventories'));
     }

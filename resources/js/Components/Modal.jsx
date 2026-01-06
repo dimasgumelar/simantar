@@ -83,6 +83,28 @@ export function FileModal({ selectedFile = {} }) {
                         autoPlay
                         className="max-h-[80vh] object-contain"
                     />
+                ) : selectedFile &&
+                  selectedFile.file_path.match(/\.(pdf|txt)$/i) ? (
+                    <iframe
+                        src={`/storage/${selectedFile.file_path}`}
+                        className="w-full h-[500px] border rounded"
+                        title="PDF Preview"
+                    />
+                ) : selectedFile &&
+                  selectedFile.file_path.match(/\.(xls|xlsx)$/i) ? (
+                    <div className="text-center">
+                        <p className="mb-2">
+                            Preview tidak tersedia untuk file Excel
+                        </p>
+                        <a
+                            href={`/storage/${selectedFile.file_path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-success"
+                        >
+                            Buka Excel
+                        </a>
+                    </div>
                 ) : (
                     <div>Tipe file tidak didukung</div>
                 )}

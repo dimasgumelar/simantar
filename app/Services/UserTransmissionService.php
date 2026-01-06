@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\User;
@@ -60,7 +61,7 @@ class UserTransmissionService
         if (!$userUpdated) {
             return null;
         }
-        
+
         $role = $this->roleRepo->find($roleId);
         if (!$role) {
             return null;
