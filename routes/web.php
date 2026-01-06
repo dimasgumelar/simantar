@@ -283,6 +283,10 @@ Route::middleware(['auth'])->group(function () {
         
    // ================= MONITORING LIVE ROUTES =================
     Route::prefix('monitoring-live')->group(function () {
+        // HALAMAN HOME
+        Route::get('/monitoring-live/home', [MonitoringLiveController::class, 'home'])
+            ->name('monitoring-live.home');
+
         // Form input
         Route::get('/create', [MonitoringLiveController::class, 'create'])
             ->name('monitoring-live.create');
