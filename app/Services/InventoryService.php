@@ -15,9 +15,9 @@ class InventoryService
         $this->fileRepo = $fileRepo;
     }
 
-    public function getAll($transmissionId, $search, $perPage, $sortField, $sortDirection)
+    public function getAll($transmissionIds, $search, $perPage, $sortField, $sortDirection)
     {
-        return $this->inventoryRepo->all($transmissionId, $search, $perPage, $sortField, $sortDirection);
+        return $this->inventoryRepo->all($transmissionIds, $search, $perPage, $sortField, $sortDirection);
     }
 
     public function getById($id)

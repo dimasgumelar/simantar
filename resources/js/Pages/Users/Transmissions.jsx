@@ -24,7 +24,7 @@ export default function UserTransmissionsIndex({
     ];
     const [deleteUserId, setDeleteUserId] = useState(null);
     const modalRef = useRef(null);
-    const { delete: destroy } = useForm();
+    const { post, processing } = useForm();
 
     const [perPage, setPerPage] = useState(userTransmissions.per_page || 10);
     const [sortField, setSortField] = useState("");
@@ -43,7 +43,7 @@ export default function UserTransmissionsIndex({
 
     function handleDelete() {
         if (deleteUserId) {
-            destroy(
+            post(
                 route("users.transmissions.destroy", {
                     user: userSelected.id,
                     id: deleteUserId,
