@@ -20,16 +20,16 @@ return new class extends Migration
             $table->time('jam_akhir');
             $table->integer('durasi');
             $table->foreignId('id_data_genset');
-            $table->string('tegangan_rs');
-            $table->string('tegangan_st');
-            $table->string('tegangan_tr');
-            $table->string('tegangan_rn');
-            $table->string('tegangan_sn');
-            $table->string('tegangan_tn');
-            $table->string('tegangan_aki');
-            $table->integer('beban_genset');
-            $table->string('kondisi_oli');
-            $table->string('link_foto');
+            $table->string('tegangan_rs')->nullable();
+            $table->string('tegangan_st')->nullable();
+            $table->string('tegangan_tr')->nullable();
+            $table->string('tegangan_rn')->nullable();
+            $table->string('tegangan_sn')->nullable();
+            $table->string('tegangan_tn')->nullable();
+            $table->string('tegangan_aki')->nullable();
+            $table->integer('beban_genset')->nullable();
+            $table->string('kondisi_oli')->nullable();
+            $table->string('link_foto')->nullable();
             $table->decimal('konsumsi_bbm');
             $table->string('kategori');
             $table->timestamps();
@@ -53,8 +53,9 @@ return new class extends Migration
         Schema::create('tb_log_bbm_oli', function (Blueprint $table) {
             $table->id();
             $table->string('kategori');
-            $table->foreignId('id_user');
+            $table->foreignId('user_id');
             $table->foreignId('id_transmisi');
+            $table->foreignId('id_data_genset');
             $table->date('tanggal');
             $table->decimal('total_solar_oli');
             $table->string('keterangan');

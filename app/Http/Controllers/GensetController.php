@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use App\Models\Genset;
+use App\Models\LogBbmOli;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\TransmissionService;
@@ -23,7 +24,7 @@ class GensetController extends Controller
 
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -48,10 +49,15 @@ class GensetController extends Controller
 
       public function molibbm_create()
     {
+
+          $transmissions = $this->transmissionService->getAll(null, [], [], 100, 'name', 'asc');
+        if ($transmissions->isEmpty()) {
+            return redirect()->route('transmissions.create')->with('warning', 'Silakan menambah transmisi sebelum menambah data alat.');
+        }
         return Inertia::render('MonitoringOliBbm/Form', [
             'MonitoringOliBbm' => new Inventory(),
             // 'categories' => $categories,
-            // 'transmissions' => $transmissions,
+             'transmissions' => $transmissions,
         ]);
     }
 
@@ -63,11 +69,13 @@ class GensetController extends Controller
     {
         // dd($request->jam_mulai);
         $data = $request->validate([
+            'user_id' => 'nullable|numeric',
+            'tanggal' => 'nullable',
             'id_transmisi' => 'required|exists:transmissions,id',
             'jam_mulai' => 'nullable|date_format:H:i',
-            'jam_Akhir' => 'nullable|date_format:H:i',
+            'jam_akhir' => 'nullable|date_format:H:i',
             'durasi' => 'required|numeric',
-            'id_data_genset' => 'nullable',
+            'id_data_genset' => 'required',
             'tegangan_rs' => 'nullable|string|max:255',
             'tegangan_st' => 'nullable|string|max:255',
             'tegangan_tr' => 'nullable|string|max:255',
@@ -77,10 +85,12 @@ class GensetController extends Controller
             'tegangan_aki' => 'nullable|string|max:255',
             'beban_genset' => 'required|numeric',
             'kondisi_oli' => 'required|string|max:10',
+            'link_foto' => 'nullable|string|max:10',
             'konsumsi_bbm' => 'nullable|numeric',
             'kategori' => 'nullable|string|max:10',
 
         ]);
+            
             $durasiMenit = $data['durasi'];
             $beban       = $data['beban_genset'];
 
@@ -110,16 +120,46 @@ class GensetController extends Controller
 
 
             $konsumsiBBM = ($durasiMenit / 60) * $beban * $faktorKonsumsi;
-            $rumusBBM = "({$durasiMenit} / 60) × {$beban} × {$faktorKonsumsi}";
+         //  $rumusBBM = "({$durasiMenit} / 60) × {$beban} × {$faktorKonsumsi}";
 
 
             // rapikan angka
             $konsumsiBBM = round($konsumsiBBM, 2);
+            $data['konsumsi_bbm'] = $konsumsiBBM;
 
            // echo $rumusBBM;
+            Genset::create($data);
         
 
-        dd($data, $konsumsiBBM, $rumusBBM);
+       // dd($data, $konsumsiBBM, $rumusBBM);
+        // $inventory = $this->inventoryService->create($data, $request->file('photo') ?? null);
+        // if (!$inventory) {
+        //     return redirect()->back()->with('error', 'Gagal menambah data alat.');
+        // }
+
+        return redirect()->route('inventories.index')->with('success', 'Berhasil menambah data alat.');
+    }
+    
+    
+        public function molibbm_store(Request $request)
+    {
+        // dd($request->jam_mulai);
+        $data = $request->validate([
+            'kategori' => 'nullable|string|max:10',
+            'user_id' => 'nullable|numeric',
+            'id_transmisi' => 'required|exists:transmissions,id',
+            'id_data_genset' => 'required',
+            'tanggal' => 'nullable',
+            'total_solar_oli' => 'required|numeric',
+            'keterangan' => 'nullable|string|max:255',
+
+        ]);
+            
+           
+        
+
+       //dd($data);
+        LogBbmOli::create($data);
         // $inventory = $this->inventoryService->create($data, $request->file('photo') ?? null);
         // if (!$inventory) {
         //     return redirect()->back()->with('error', 'Gagal menambah data alat.');

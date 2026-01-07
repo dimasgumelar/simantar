@@ -6,25 +6,32 @@ import FormButton from "@/Components/FormButton";
 import { Input, InputDropdownManual, InputImage } from "@/Components/FormInput";
 import { GENSET_OPTIONS, INVENTORY_CONDITION_OPTIONS, MOLIBBM_OPTIONS } from "@/utils/constants";
 import { BreadcrumbsMonitoringOliBbm } from "@/Pages/MonitoringOliBbm/Constant";
+import Roles from "@/utils/UserFromUsePage";
+
 
 export default function MonitoringOliBbmForm({
+    
     inventory = {},
     isEdit = false,
     // categories = [],
     transmissions = [],
+    
 }) {
+   // const { auth } = usePage().props;
     const breadcrumbs = [
         <BreadcrumbsMonitoringOliBbm />,
         isEdit ? "Ubah" : "Tambah",
     ];
 
     const [previewUrl, setPreviewUrl] = useState(null);
+    const { userFromUsePage, role } = Roles();
 
     const { data, setData, post, put, processing, errors } = useForm({
         id: "",
         kategori:1,
-        id_user: "",
+        user_id:1,
         id_transmisi: "",
+        id_data_genset:1,
         tanggal: new Date().toLocaleDateString("en-CA"), // Default to toda
         total_solar_oli: "",
         keterangan:"",
@@ -58,7 +65,7 @@ export default function MonitoringOliBbmForm({
         if (isEdit) {
             post(route("MonitoringGenset.update", data.id));
         } else {
-            post(route("MonitoringGenset.store"));
+            post(route("molibbm.store"));
         }
     };
 
@@ -128,6 +135,17 @@ export default function MonitoringOliBbmForm({
                 <div className="card-body">
                     <Breadcrumbs list={breadcrumbs} />
                     <form onSubmit={submit} className="space-y-4 mt-4">
+                         
+                         <Input
+                            type="text"
+                            label="Nama Operator"
+                            placeholder="Nama Operator"
+                            value={userFromUsePage.id}
+                            onChange={(e) =>
+                                setData("tanggal", e.target.value)
+                            }
+                            error={errors.tanggal}
+                        />
                          <InputDropdownManual
                             isRequired={true}
                             label="Kategori"
@@ -162,9 +180,9 @@ export default function MonitoringOliBbmForm({
                             labelKey="name"
                             idKey="id"
                         />
-                        {data.kategori == 2 &&(
+                        {data.kategori == 'BBM' &&(
                             <Input
-                            type="text"
+                            type="number"
                             label="Total BBM"
                             placeholder="Total BBM"
                             value={data.total_solar_oli}
@@ -175,9 +193,9 @@ export default function MonitoringOliBbmForm({
                         />
 
                         )}                  
-                        {data.kategori == 1 && (
+                        {data.kategori == 'OLI' && (
                             <Input
-                            type="text"
+                            type="number"
                             label="Total Oli"
                             placeholder="Total Oli"
                             value={data.total_solar_oli}

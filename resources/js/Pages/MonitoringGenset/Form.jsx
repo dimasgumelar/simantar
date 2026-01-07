@@ -22,13 +22,13 @@ export default function MonitoringGensetForm({
 
     const { data, setData, post, put, processing, errors } = useForm({
         //id: null,
-        user_id: null,
+        user_id: 1,
         tanggal: new Date().toLocaleDateString("en-CA"), // Default to today
         id_transmisi: null,
         jam_mulai: null,
         jam_akhir: null,
         durasi: null,
-        id_data_genset:null,
+        id_data_genset:1,
         tegangan_rs:"",
         tegangan_st:"",
         tegangan_tr:"",
@@ -38,6 +38,7 @@ export default function MonitoringGensetForm({
         tegangan_aki:"",
         beban_genset:null,
         kondisi_oli:"",
+        link_foto:null,
         konsumsi_bbm:null,
         kategori:"",
         
@@ -202,7 +203,7 @@ export default function MonitoringGensetForm({
                             onChange={(e) => setData("durasi", e.target.value)}
                             error={errors.durasi}
                         />
-                        {data.kategori == 2 && (<>
+                        {data.kategori == 'PLN ON' && (<>
                             <Input
                                 type="text"
                                 label="Tegangan RS"
@@ -217,11 +218,11 @@ export default function MonitoringGensetForm({
                             type="text"
                             label="Tegangan ST"
                             placeholder="Tegangan ST"
-                            value={data.tegangan_rs}
+                            value={data.tegangan_st}
                             onChange={(e) =>
-                                setData("tegangan_rs", e.target.value)
+                                setData("tegangan_st", e.target.value)
                             }
-                            error={errors.tegangan_rs}
+                            error={errors.tegangan_st}
                         />
                         <Input
                             type="text"

@@ -56,7 +56,7 @@ export default function InventoriesIndex({ inventories }) {
     }
 
     function applyFilters(overrides = {}) {
-        inertiaGet("inventories.index", {
+        inertiaGet("monitoring_genset.index", {
             page: 1,
             per_page: perPage,
             search: search,
