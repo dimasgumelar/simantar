@@ -135,7 +135,7 @@ class MaintenanceController extends Controller
 
         $transmissionId = $request->input('transmission_id', $transmissions[0]->id);
 
-        $inventories = $this->inventoryService->getAll($transmissionId, null, 0, 'id', 'asc');
+        $inventories = $this->inventoryService->getAll([$transmissionId], null, 0, 'id', 'asc');
         // if ($inventories->isEmpty()) {
         //     return redirect()->route('inventories.create')->with('warning', 'Please create an inventory before adding a maintenance record.');
         // }
@@ -231,7 +231,7 @@ class MaintenanceController extends Controller
         $transmissionId = $request->input('transmission_id', $maintenance->transmission->id);
         $maintenance->transmission_id = $transmissionId;
 
-        $inventories = $this->inventoryService->getAll($transmissionId, null, 0, 'id', 'asc');
+        $inventories = $this->inventoryService->getAll([$transmissionId], null, 0, 'id', 'asc');
 
         $users = $this->userTransmissionService->getAllByTransmissionId($transmissionId, 0, 'name', 'asc');
         if ($maintenance->transmission_id != $maintenance->transmission->id) {

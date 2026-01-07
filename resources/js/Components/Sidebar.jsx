@@ -118,7 +118,20 @@ export default function Sidebar({
             label: "Monitoring Siaran",
             icon: <FaTv />,
             roles: ["admin", "ketua tim", "teknisi", "operator"],
-            routeStr: "monitoring-siaran.home",
+            list: [
+                {
+                    label: "Harian",
+                    icon: <FaCalendarAlt />,
+                    routeStr: "monitoring-siaran.home",
+                    roles: ["admin", "ketua tim", "teknisi", "operator"],
+                },
+                {
+                    label: "Live",
+                    icon: <FaBroadcastTower />,
+                    routeStr: "monitoring-live.home",
+                    roles: ["admin", "ketua tim", "teknisi", "operator"],
+                },
+            ],
         },
         {
             label: "Maintenance",
@@ -196,8 +209,7 @@ export default function Sidebar({
 
                     // MENU DENGAN CHILD
                     if (menu.list) {
-                        const isOpen =
-                            openMenu === index || isChildActive(menu.list);
+                        const isOpen = openMenu === index;
 
                         return (
                             <div

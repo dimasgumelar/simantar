@@ -10,6 +10,14 @@ use Inertia\Inertia;
 class MonitoringLiveController extends Controller
 {
     /**
+     * FORM INPUT
+     */
+    public function home()
+    {
+        return Inertia::render('MonitoringLive/Home');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

@@ -5,7 +5,7 @@ use App\Models\Inventory;
 
 class InventoryRepository
 {
-    public function all($transmissionId, $search, $perPage, $sortField, $sortDirection)
+    public function all($transmissionIds, $search, $perPage, $sortField, $sortDirection)
     {
         $query = Inventory::query()->select('inventories.*');
         if ($search) {
@@ -20,8 +20,8 @@ class InventoryRepository
         $query->join('categories', 'inventories.category_id', '=', 'categories.id');
         $query->join('transmissions', 'inventories.transmission_id', '=', 'transmissions.id');
 
-        if ($transmissionId) {
-            $query->where('inventories.transmission_id', $transmissionId);
+        if ($transmissionIds) {
+            $query->whereIn('inventories.transmission_id', $transmissionIds);
         }
 
         if ($sortField && in_array($sortField, ['id', 'inventory_code', 'name', 'created_at'])) {
