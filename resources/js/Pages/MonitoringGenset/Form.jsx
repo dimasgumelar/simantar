@@ -6,29 +6,31 @@ import FormButton from "@/Components/FormButton";
 import { Input, InputDropdownManual, InputImage } from "@/Components/FormInput";
 import { GENSET_OPTIONS, INVENTORY_CONDITION_OPTIONS } from "@/utils/constants";
 import { BreadcrumbsMonitoringGenset } from "@/Pages/MonitoringGenset/Constant";
+import Index from "../MonitoringLive/Index";
 
 export default function MonitoringGensetForm({
     inventory = {},
     isEdit = false,
-    // categories = [],
+    mastergenset = [],
     transmissions = [],
 }) {
     const breadcrumbs = [
         <BreadcrumbsMonitoringGenset />,
         isEdit ? "Ubah" : "Tambah",
     ];
+    console.log(transmissions);
 
     const [previewUrl, setPreviewUrl] = useState(null);
 
     const { data, setData, post, put, processing, errors } = useForm({
         //id: null,
-        user_id: 1,
+        user_id: null,
         tanggal: new Date().toLocaleDateString("en-CA"), // Default to today
-        id_transmisi: null,
+        id_transmisi: transmissions?.data?.length > 0 ? transmissions.data[0].id : null,
         jam_mulai: null,
         jam_akhir: null,
         durasi: null,
-        id_data_genset:1,
+        id_data_genset:null,
         tegangan_rs:"",
         tegangan_st:"",
         tegangan_tr:"",
@@ -39,13 +41,20 @@ export default function MonitoringGensetForm({
         beban_genset:null,
         kondisi_oli:"",
         link_foto:null,
+        foto:null,
         konsumsi_bbm:null,
         kategori:"",
+        //kapasitas_daya_kwh:"",
         
         // category_id: 1,
        
     });
 
+    // Object.entries(mastergenset).map(([transmisiId, gensets]) => {
+    //     gensets.map((element, index) => {
+    //         mastergenset[transmisiId][index]["merek_genset"] = element["merek_genset"] + " - " + element["tipe_genset"]
+    //     })
+    // })
     // useEffect(() => {
     //     if (isEdit && inventory) {
     //         setData({
@@ -82,11 +91,11 @@ export default function MonitoringGensetForm({
                 alert("Pilih file gambar yang valid.");
                 return;
             }
-            setData("photo", file);
-            setData("photo_path", null);
+            setData("foto", file);
+            setData("link_foto", null);
             setPreviewUrl(URL.createObjectURL(file));
         } else {
-            setData("photo", null);
+            setData("foto", null);
         }
     };
 
@@ -173,6 +182,18 @@ export default function MonitoringGensetForm({
                             error={errors.id_transmisi}
                             list={transmissions.data}
                             labelKey="name"
+                            idKey="id"
+                        />
+                        <InputDropdownManual
+                            isRequired={true}
+                            label="Genset"
+                            value={data.id_data_genset}
+                            onChange={(e) =>
+                                setData("id_data_genset", e.target.value)
+                            }
+                            error={errors.id_data_genset}
+                            list={mastergenset[data.id_transmisi]}
+                            labelKey="merek_genset"
                             idKey="id"
                         />
                         <Input
@@ -273,6 +294,16 @@ export default function MonitoringGensetForm({
                                 setData("tegangan_aki", e.target.value)
                             }
                             error={errors.tegangan_aki}
+                        />
+                        <InputImage
+                            label="Foto"
+                            value={data.photo}
+                            error={errors.photo}
+                            onPhotoChange={onPhotoChange}
+                            previewUrl={previewUrl}
+                            initValue={inventory.photo}
+                            onDeleteHandler={onDeleteHandler}
+                            accept="image/*"
                         />
                         </>
                         )}

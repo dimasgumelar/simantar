@@ -14,6 +14,7 @@ export default function MonitoringOliBbmForm({
     inventory = {},
     isEdit = false,
     // categories = [],
+    mastergenset = [],
     transmissions = [],
     
 }) {
@@ -30,8 +31,8 @@ export default function MonitoringOliBbmForm({
         id: "",
         kategori:1,
         user_id:1,
-        id_transmisi: "",
-        id_data_genset:1,
+        id_transmisi: transmissions?.data?.length > 0 ? transmissions.data[0].id : null,
+        id_data_genset:null,
         tanggal: new Date().toLocaleDateString("en-CA"), // Default to toda
         total_solar_oli: "",
         keterangan:"",
@@ -135,17 +136,7 @@ export default function MonitoringOliBbmForm({
                 <div className="card-body">
                     <Breadcrumbs list={breadcrumbs} />
                     <form onSubmit={submit} className="space-y-4 mt-4">
-                         
-                         <Input
-                            type="text"
-                            label="Nama Operator"
-                            placeholder="Nama Operator"
-                            value={userFromUsePage.id}
-                            onChange={(e) =>
-                                setData("tanggal", e.target.value)
-                            }
-                            error={errors.tanggal}
-                        />
+                     
                          <InputDropdownManual
                             isRequired={true}
                             label="Kategori"
@@ -180,6 +171,19 @@ export default function MonitoringOliBbmForm({
                             labelKey="name"
                             idKey="id"
                         />
+                        <InputDropdownManual
+                            isRequired={true}
+                            label="Genset"
+                            value={data.id_data_genset}
+                            onChange={(e) =>
+                                setData("id_data_genset", e.target.value)
+                            }
+                            error={errors.id_data_genset}
+                            list={mastergenset[data.id_transmisi]}
+                            labelKey="merek_genset"
+                            idKey="id"
+                        />                        
+                        
                         {data.kategori == 'BBM' &&(
                             <Input
                             type="number"
@@ -219,53 +223,7 @@ export default function MonitoringOliBbmForm({
                             error={errors.keterangan}
                             
                         />
-                        {/* <InputDropdownManual
-                            isRequired={true}
-                            label="Category"
-                            value={data.category_id}
-                            onChange={(e) =>
-                                setData("category_id", e.target.value)
-                            }
-                            error={errors.category_id}
-                            list={categories.data}
-                            labelKey="name"
-                            idKey="id"
-                        /> */}
-                        {/* <InputDropdownManual
-                            isRequired={true}
-                            label="Transmisi"
-                            value={data.transmission_id}
-                            onChange={(e) =>
-                                setData("transmission_id", e.target.value)
-                            }
-                            error={errors.transmission_id}
-                            list={transmissions.data}
-                            labelKey="name"
-                            idKey="id"
-                        />
-                        <Input
-                            type="date"
-                            label="Tanggal Diterima"
-                            placeholder="Tanggal Diterima"
-                            value={data.received_at}
-                            onChange={(e) =>
-                                setData("received_at", e.target.value)
-                            }
-                            error={errors.received_at}
-                        />
-                        <InputDropdownManual
-                            isRequired={true}
-                            label="Kondisi"
-                            value={data.condition}
-                            onChange={(e) =>
-                                setData("condition", e.target.value)
-                            }
-                            error={errors.condition}
-                            list={INVENTORY_CONDITION_OPTIONS}
-                            labelKey="label"
-                            idKey="value"
-                        />
-                         */}
+                       
                         <FormButton
                             processing={processing}
                             isEdit={isEdit}

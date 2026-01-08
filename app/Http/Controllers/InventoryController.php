@@ -140,6 +140,7 @@ class InventoryController extends Controller
             'received_at' => 'nullable|date',
             'condition' => 'required|numeric|min:1|max:3',
         ]);
+        // dd($data);
 
         $inventory = $this->inventoryService->create($data, $request->file('photo') ?? null);
         if (!$inventory) {

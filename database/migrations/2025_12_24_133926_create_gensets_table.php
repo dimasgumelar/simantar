@@ -40,12 +40,12 @@ return new class extends Migration
         Schema::create('tb_master_data_genset', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_transmisi');
-            $table->string('tipe_genset');
-            $table->string('merek_genset');
-            $table->decimal('kapasitas_daya_kva');
-            $table->decimal('kapasitas_daya_kwh');
-            $table->string('model_mesin');
-            $table->string('rate_model');
+            $table->string('tipe_genset')->nullable();
+            $table->string('merek_genset')->nullable();
+            $table->decimal('kapasitas_daya_kva')->nullable();
+            $table->decimal('kapasitas_daya_kwh')->nullable();
+            $table->string('model_mesin')->nullable();
+            $table->string('rate_model')->nullable();
             $table->timestamps();
             $table->softdeletes();
         });
@@ -58,7 +58,15 @@ return new class extends Migration
             $table->foreignId('id_data_genset');
             $table->date('tanggal');
             $table->decimal('total_solar_oli');
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
+            $table->timestamps();
+            $table->softdeletes();
+        });
+
+        Schema::create('tb_sisa_bbm', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_transmisi');
+            $table->decimal('sisa_bbm')->nullable();
             $table->timestamps();
             $table->softdeletes();
         });
@@ -72,5 +80,6 @@ return new class extends Migration
         Schema::dropIfExists('tb_monitoring_genset');
         Schema::dropIfExists('tb_master_data_genset');
         Schema::dropIfExists('tb_log_bbm_oli');
+        Schema::dropIfExists('tb_sisa_bbm');
     }
 };

@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             MaintenanceStatusHistorySeeder::class,
             UserTransmissionSeeder::class,
             MasterPeralatanSeeder::class,
+            SisabbmSeeder::class,
+            MasterDataGensetSeeder::class,
         ]);
     }
 }

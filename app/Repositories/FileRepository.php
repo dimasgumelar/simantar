@@ -8,7 +8,14 @@ class FileRepository
 {
     public function store($file, $folder)
     {
-        return $file->store($folder, 'public');
+        $disk = 'public';
+
+        // cek folder, kalau belum ada → buat
+        if (!Storage::disk($disk)->exists($folder)) {
+            Storage::disk($disk)->makeDirectory($folder);
+        }
+
+        return $file->store($folder, $disk);
     }
 
     public function delete($filePath)

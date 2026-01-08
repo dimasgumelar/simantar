@@ -92,7 +92,7 @@ export default function Sidebar({
         {
             label: "Genset",
             icon: <FaBolt />,
-            roles: ["admin", "ketua tim", "teknisi"],
+            roles: ["admin", "ketua tim", "teknisi", "operator"],
             list: [
                 {
                     label: "Monitoring",
