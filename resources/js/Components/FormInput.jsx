@@ -39,6 +39,42 @@ export const Input = forwardRef(function Input(
     );
 });
 
+export const Textarea = forwardRef(function Textarea(
+    {
+        isRequired = false,
+        placeholder = "",
+        label = "",
+        value,
+        onChange,
+        error,
+        disabled = false,
+        rows = 3,
+    },
+    ref
+) {
+    return (
+        <div>
+            {label != "" && (
+                <label className="label block mb-2">
+                    {label}
+                    {isRequired ? <span className="text-red-500"> *</span> : ""}
+                </label>
+            )}
+            <textarea
+                ref={ref}
+                required={isRequired}
+                rows={rows}
+                className="textarea w-full"
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                disabled={disabled}
+            />
+            {error && <div className="text-error text-sm mt-1">{error}</div>}
+        </div>
+    );
+});
+
 export const InputFile = forwardRef(function InputFile(
     {
         isRequired = false,
@@ -146,10 +182,12 @@ export function InputDropdownManual({
 
     return (
         <div className="relative" ref={dropdownRef}>
-            <label className="label block mb-2">
-                {label}
-                {isRequired && <span className="text-red-500"> *</span>}
-            </label>
+            {label != "" && (
+                <label className="label block mb-2">
+                    {label}
+                    {isRequired && <span className="text-red-500"> *</span>}
+                </label>
+            )}
 
             <div
                 className={`input input-bordered w-full flex justify-between items-center cursor-pointer ${

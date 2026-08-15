@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { Head, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Breadcrumbs from "@/Components/Breadcrumbs";
+import { DownloadButton } from "@/Components/Button";
 import { InputDropdownManual } from "@/Components/FormInput";
 import { DateInput } from "@/Components/Flatpickr";
 import { inertiaGet } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
+import PowerList from "./Partials/PowerList";
 
 export default function LogbooksDayView({
     transmissions,
@@ -47,25 +49,73 @@ export default function LogbooksDayView({
         });
     }
 
+    function handleDownloadPdf() {
+        window.location.href = route("logbooks.pdf", logbook.id);
+    }
+
     return (
         <AuthenticatedLayout>
             <Head title="Logbook" />
             <div className="card bg-base-100 shadow-sm w-full">
                 <div className="card-body">
-                    <Breadcrumbs list={breadcrumbs} />
+                    <div className="flex items-center justify-between">
+                        <Breadcrumbs list={breadcrumbs} />
+                        {logbook && (
+                            <DownloadButton
+                                onClick={handleDownloadPdf}
+                                label="Unduh PDF"
+                            />
+                        )}
+                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-                        <InputDropdownManual
-                            label="Transmisi"
-                            value={selectedTransmission}
-                            onChange={handleTransmissionChange}
-                            list={transmissions}
-                        />
-                        <DateInput
-                            label="Tanggal"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                        />
+                    <div className="overflow-x-auto mt-2">
+                        <table className="table">
+                            <tbody>
+                                <tr>
+                                    <th className="w-32 align-middle">
+                                        Transmisi
+                                    </th>
+                                    <td>
+                                        <InputDropdownManual
+                                            label=""
+                                            value={selectedTransmission}
+                                            onChange={handleTransmissionChange}
+                                            list={transmissions}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th className="w-32 align-middle">
+                                        Tanggal
+                                    </th>
+                                    <td>
+                                        <DateInput
+                                            label=""
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                        />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th className="w-32 align-middle">
+                                        Power Transmisi
+                                    </th>
+                                    <td>
+                                        {logbook ? (
+                                            <PowerList
+                                                logbook={logbook}
+                                                canManage={true}
+                                            />
+                                        ) : (
+                                            <span className="text-sm opacity-70">
+                                                Buat logbook terlebih dahulu
+                                                untuk mencatat power.
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     {!selectedTransmission ? (

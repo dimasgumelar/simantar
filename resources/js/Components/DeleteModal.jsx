@@ -6,9 +6,10 @@ export default function DeleteModal({
     onConfirm,
     title = "",
     isDeleting = false,
+    id = "delete_modal",
 }) {
     return (
-        <dialog ref={modalRef} className="modal" id="delete_modal">
+        <dialog ref={modalRef} className="modal" id={id}>
             <div className="modal-box">
                 <h3 className="font-bold text-lg">
                     Apakah Anda yakin menghapus data {title} ini?

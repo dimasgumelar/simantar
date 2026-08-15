@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\LogbookEventController;
+use App\Http\Controllers\LogbookNoteController;
+use App\Http\Controllers\LogbookPowerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
@@ -63,6 +65,7 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator|koordinator'])
 
     Route::get('/logbooks', [LogbookController::class, 'index'])->name('logbooks.index');
     Route::get('/logbooks/{logbook}/view', [LogbookController::class, 'show'])->name('logbooks.view');
+    Route::get('/logbooks/{logbook}/pdf', [LogbookController::class, 'pdf'])->name('logbooks.pdf');
 });
 
 Route::middleware(['auth', 'role:operator|koordinator'])->group(function () {
@@ -73,6 +76,13 @@ Route::middleware(['auth', 'role:operator|koordinator'])->group(function () {
     Route::post('/logbooks/{logbook}/events', [LogbookEventController::class, 'store'])->name('logbooks.events.store');
     Route::post('/logbooks/{logbook}/events/{event}', [LogbookEventController::class, 'update'])->name('logbooks.events.update');
     Route::delete('/logbooks/{logbook}/events/{event}/delete', [LogbookEventController::class, 'destroy'])->name('logbooks.events.destroy');
+
+    Route::post('/logbooks/{logbook}/notes', [LogbookNoteController::class, 'store'])->name('logbooks.notes.store');
+    Route::post('/logbooks/{logbook}/notes/{note}', [LogbookNoteController::class, 'update'])->name('logbooks.notes.update');
+    Route::delete('/logbooks/{logbook}/notes/{note}/delete', [LogbookNoteController::class, 'destroy'])->name('logbooks.notes.destroy');
+
+    Route::post('/logbooks/{logbook}/powers', [LogbookPowerController::class, 'store'])->name('logbooks.powers.store');
+    Route::delete('/logbooks/{logbook}/powers/{power}/delete', [LogbookPowerController::class, 'destroy'])->name('logbooks.powers.destroy');
 });
 
 require __DIR__.'/auth.php';

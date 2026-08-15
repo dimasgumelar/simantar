@@ -37,7 +37,7 @@ export function DeleteButton({ onClick }) {
     );
 }
 
-export function DownloadButton({ onClick }) {
+export function DownloadButton({ onClick, label = "Unduh" }) {
     return (
         <button
             type="button"
@@ -45,7 +45,7 @@ export function DownloadButton({ onClick }) {
             className="btn btn-neutral mr-2"
         >
             <FaDownload />
-            <span className="hidden sm:flex">Unduh</span>
+            <span className="hidden sm:flex">{label}</span>
         </button>
     );
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Logbook;
 use App\Services\LogbookService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -93,6 +94,18 @@ class LogbookController extends Controller
             'logbook' => $logbook,
             'copyableLogbooks' => $this->logbookService->getCopyableLogbooks($logbook),
         ]);
+    }
+
+    public function pdf(Logbook $logbook)
+    {
+        $logbook = $this->logbookService->getById($logbook->id);
+
+        $pdf = Pdf::loadView('logbooks.pdf', compact('logbook'))
+            ->setPaper('a4', 'portrait');
+
+        $filename = 'logbook-' . str($logbook->transmission->name)->slug() . '-' . $logbook->tanggal->format('Y-m-d') . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     public function sign(Logbook $logbook, Request $request)

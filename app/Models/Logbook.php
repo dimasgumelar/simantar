@@ -37,4 +37,14 @@ class Logbook extends Model
     {
         return $this->hasMany(LogbookEvent::class);
     }
+
+    public function notes()
+    {
+        return $this->hasMany(LogbookNote::class);
+    }
+
+    public function powers()
+    {
+        return $this->hasMany(LogbookPower::class);
+    }
 }

@@ -2,15 +2,25 @@ import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Breadcrumbs from "@/Components/Breadcrumbs";
+import { DownloadButton } from "@/Components/Button";
 import { parseDate } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
+import PowerList from "./Partials/PowerList";
+import Roles from "@/utils/UserFromUsePage";
 
 export default function LogbooksShow({ logbook, copyableLogbooks }) {
+    const { role } = Roles();
+    const canManage = role.hasOperator || role.hasKoordinator;
+
     const breadcrumbs = [
         <BreadcrumbsLogbooks />,
         `${logbook.transmission.name} - ${parseDate(logbook.tanggal)}`,
     ];
+
+    function handleDownloadPdf() {
+        window.location.href = route("logbooks.pdf", logbook.id);
+    }
 
     return (
         <AuthenticatedLayout>
@@ -18,7 +28,37 @@ export default function LogbooksShow({ logbook, copyableLogbooks }) {
 
             <div className="card bg-base-100 shadow-sm w-full">
                 <div className="card-body">
-                    <Breadcrumbs list={breadcrumbs} />
+                    <div className="flex items-center justify-between">
+                        <Breadcrumbs list={breadcrumbs} />
+                        <DownloadButton
+                            onClick={handleDownloadPdf}
+                            label="Unduh PDF"
+                        />
+                    </div>
+
+                    <div className="overflow-x-auto mt-2">
+                        <table className="table">
+                            <tbody>
+                                <tr>
+                                    <th>Transmisi</th>
+                                    <td>{logbook.transmission.name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <td>{parseDate(logbook.tanggal)}</td>
+                                </tr>
+                                <tr>
+                                    <th>Power Transmisi</th>
+                                    <td>
+                                        <PowerList
+                                            logbook={logbook}
+                                            canManage={canManage}
+                                        />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <LogbookDetail
                         logbook={logbook}

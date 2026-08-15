@@ -3,6 +3,8 @@ namespace App\Services;
 
 use App\Models\Transmission;
 use App\Repositories\LogbookEventRepository;
+use App\Repositories\LogbookNoteRepository;
+use App\Repositories\LogbookPowerRepository;
 use App\Repositories\LogbookRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -10,11 +12,19 @@ class LogbookService
 {
     protected $logbookRepo;
     protected $logbookEventRepo;
+    protected $logbookNoteRepo;
+    protected $logbookPowerRepo;
 
-    public function __construct(LogbookRepository $logbookRepo, LogbookEventRepository $logbookEventRepo)
-    {
+    public function __construct(
+        LogbookRepository $logbookRepo,
+        LogbookEventRepository $logbookEventRepo,
+        LogbookNoteRepository $logbookNoteRepo,
+        LogbookPowerRepository $logbookPowerRepo
+    ) {
         $this->logbookRepo = $logbookRepo;
         $this->logbookEventRepo = $logbookEventRepo;
+        $this->logbookNoteRepo = $logbookNoteRepo;
+        $this->logbookPowerRepo = $logbookPowerRepo;
     }
 
     public function getAccessibleTransmissions($user)
@@ -94,6 +104,45 @@ class LogbookService
     public function deleteEvent($event)
     {
         return $this->logbookEventRepo->delete($event);
+    }
+
+    public function addNote($logbookId, $category, $startTime, $endTime, $notes)
+    {
+        return $this->logbookNoteRepo->create([
+            'logbook_id' => $logbookId,
+            'category' => $category,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'notes' => $notes,
+        ]);
+    }
+
+    public function updateNote($note, $category, $startTime, $endTime, $notes)
+    {
+        return $this->logbookNoteRepo->update($note, [
+            'category' => $category,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'notes' => $notes,
+        ]);
+    }
+
+    public function deleteNote($note)
+    {
+        return $this->logbookNoteRepo->delete($note);
+    }
+
+    public function addPower($logbookId, $power)
+    {
+        return $this->logbookPowerRepo->create([
+            'logbook_id' => $logbookId,
+            'power' => $power,
+        ]);
+    }
+
+    public function deletePower($power)
+    {
+        return $this->logbookPowerRepo->delete($power);
     }
 
     public function getCopyableLogbooks($logbook)
