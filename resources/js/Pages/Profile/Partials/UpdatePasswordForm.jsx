@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/react";
 import { useRef } from "react";
+import { Input } from "@/Components/FormInput";
 
 export default function UpdatePasswordForm() {
     const passwordInput = useRef();
@@ -41,90 +42,61 @@ export default function UpdatePasswordForm() {
 
     return (
         <div className="card bg-base-100 shadow-sm w-full">
-            <div className="card-body pb-0">
-                <form onSubmit={updatePassword}>
-                    <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                        <legend className="fieldset-legend">
-                            Ubah Kata Sandi
-                        </legend>
-
-                        <label className="label">Kata Sandi Saat Ini</label>
-                        <input
-                            className="input"
-                            placeholder="Kata Sandi Saat Ini"
-                            required
-                            id="current_password"
-                            ref={currentPasswordInput}
-                            value={data.current_password}
-                            onChange={(e) =>
-                                setData("current_password", e.target.value)
-                            }
-                            type="password"
-                            autoComplete="current-password"
-                        />
-                        {errors.current_password && (
-                            <div className="text-error text-sm mt-1">
-                                {errors.current_password}
-                            </div>
-                        )}
-                        <label className="label">Kata Sandi Baru</label>
-                        <input
-                            className="input"
-                            placeholder="Kata Sandi Baru"
-                            required
-                            id="password"
-                            ref={passwordInput}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                            type="password"
-                            autoComplete="new-password"
-                        />
-                        {errors.password && (
-                            <div className="text-error text-sm mt-1">
-                                {errors.password}
-                            </div>
-                        )}
-                        <label className="label">Konfirmasi Kata Sandi</label>
-                        <input
-                            className="input"
-                            placeholder="Konfirmasi Kata Sandi"
-                            required
-                            ref={currentPasswordInput}
-                            id="password_confirmation"
-                            value={data.password_confirmation}
-                            onChange={(e) =>
-                                setData("password_confirmation", e.target.value)
-                            }
-                            type="password"
-                            autoComplete="new-password"
-                        />
-                        {errors.password_confirmation && (
-                            <div className="text-error text-sm mt-1">
-                                {errors.password_confirmation}
-                            </div>
-                        )}
-                        <div>
-                            <button
-                                type="submit"
-                                className={`btn ${
-                                    processing
-                                        ? "btn-disabled"
-                                        : recentlySuccessful
-                                        ? "btn-success"
-                                        : "btn-primary"
-                                } mt-4`}
-                                disabled={processing}
-                            >
-                                {processing
-                                    ? "Menyimpan..."
+            <div className="card-body">
+                <h2 className="card-title">Ubah Kata Sandi</h2>
+                <form onSubmit={updatePassword} className="space-y-4 mt-2">
+                    <Input
+                        ref={currentPasswordInput}
+                        isRequired={true}
+                        type="password"
+                        label="Kata Sandi Saat Ini"
+                        placeholder="Kata Sandi Saat Ini"
+                        value={data.current_password}
+                        onChange={(e) =>
+                            setData("current_password", e.target.value)
+                        }
+                        error={errors.current_password}
+                    />
+                    <Input
+                        ref={passwordInput}
+                        isRequired={true}
+                        type="password"
+                        label="Kata Sandi Baru"
+                        placeholder="Kata Sandi Baru"
+                        value={data.password}
+                        onChange={(e) => setData("password", e.target.value)}
+                        error={errors.password}
+                    />
+                    <Input
+                        isRequired={true}
+                        type="password"
+                        label="Konfirmasi Kata Sandi"
+                        placeholder="Konfirmasi Kata Sandi"
+                        value={data.password_confirmation}
+                        onChange={(e) =>
+                            setData("password_confirmation", e.target.value)
+                        }
+                        error={errors.password_confirmation}
+                    />
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            className={`btn ${
+                                processing
+                                    ? "btn-disabled"
                                     : recentlySuccessful
-                                    ? "Tersimpan"
-                                    : "Simpan"}
-                            </button>
-                        </div>
-                    </fieldset>
+                                    ? "btn-success"
+                                    : "btn-primary"
+                            }`}
+                            disabled={processing}
+                        >
+                            {processing
+                                ? "Menyimpan..."
+                                : recentlySuccessful
+                                ? "Tersimpan"
+                                : "Simpan"}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -62,10 +62,14 @@ export default function AuthenticatedLayout({ children }) {
                     .map(({ label, icon, routeStr }) => (
                         <Link
                             key={label}
-                            className="flex items-center space-x-4 hover:bg-base-300 rounded p-2"
+                            className={`flex items-center h-10 rounded hover:bg-base-300 ${
+                                open ? "gap-4 px-3" : "justify-center"
+                            }`}
                             href={route(routeStr)}
                         >
-                            {icon}
+                            <span className="flex-shrink-0 text-lg leading-none">
+                                {icon}
+                            </span>
                             {open && <span>{label}</span>}
                         </Link>
                     ))}
@@ -163,14 +167,28 @@ export default function AuthenticatedLayout({ children }) {
                         <div
                             tabIndex={0}
                             role="button"
-                            className="btn btn-ghost btn-circle avatar"
+                            className={`btn btn-ghost btn-circle ${
+                                userFromUsePage?.photo_path
+                                    ? "avatar"
+                                    : "avatar avatar-placeholder"
+                            }`}
                         >
-                            <div className="w-10 rounded-full">
-                                <img
-                                    alt="Tailwind CSS Navbar component"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                                />
-                            </div>
+                            {userFromUsePage?.photo_path ? (
+                                <div className="w-10 rounded-full">
+                                    <img
+                                        alt="Foto profil"
+                                        src={`/storage/${userFromUsePage.photo_path}`}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="bg-neutral text-neutral-content w-10 rounded-full">
+                                    <span>
+                                        {userFromUsePage?.name
+                                            ?.charAt(0)
+                                            .toUpperCase()}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         <ul
                             tabIndex={0}

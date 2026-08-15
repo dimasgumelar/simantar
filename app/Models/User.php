@@ -26,6 +26,7 @@ class User extends Authenticatable
         'nip',
         'pangkat_golongan',
         'jabatan',
+        'photo_path',
     ];
 
     /**

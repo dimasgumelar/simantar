@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Repositories\FileRepository;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,13 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    protected $fileRepo;
+
+    public function __construct(FileRepository $fileRepo)
+    {
+        $this->fileRepo = $fileRepo;
+    }
+
     /**
      * Display the user's profile form.
      */
@@ -21,6 +29,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'user' => $request->user()->load('roles'),
         ]);
     }
 
@@ -36,6 +45,36 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+
+        return Redirect::route('profile.edit');
+    }
+
+    /**
+     * Update the user's profile photo.
+     */
+    public function updatePhoto(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'photo' => ['required', 'image', 'max:2048'],
+        ]);
+
+        $user = $request->user();
+        $this->fileRepo->delete($user->photo_path);
+        $user->photo_path = $this->fileRepo->store($request->file('photo'), 'users');
+        $user->save();
+
+        return Redirect::route('profile.edit');
+    }
+
+    /**
+     * Remove the user's profile photo.
+     */
+    public function destroyPhoto(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        $this->fileRepo->delete($user->photo_path);
+        $user->photo_path = null;
+        $user->save();
 
         return Redirect::route('profile.edit');
     }

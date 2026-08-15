@@ -2,17 +2,20 @@ import React, { forwardRef, useState, useRef, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
 import { DEFAULT_IMAGE } from "@/utils/constants";
 
-export function Input({
-    isRequired = false,
-    type = "text",
-    placeholder = "",
-    label = "",
-    value,
-    onChange,
-    error,
-    disabled = false,
-    className = "",
-}) {
+export const Input = forwardRef(function Input(
+    {
+        isRequired = false,
+        type = "text",
+        placeholder = "",
+        label = "",
+        value,
+        onChange,
+        error,
+        disabled = false,
+        className = "",
+    },
+    ref
+) {
     return (
         <div>
             {label != "" && (
@@ -22,6 +25,7 @@ export function Input({
                 </label>
             )}
             <input
+                ref={ref}
                 required={isRequired}
                 type={type}
                 className={`input w-full ${className}`}
@@ -33,7 +37,7 @@ export function Input({
             {error && <div className="text-error text-sm mt-1">{error}</div>}
         </div>
     );
-}
+});
 
 export const InputFile = forwardRef(function InputFile(
     {
