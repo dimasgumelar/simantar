@@ -91,7 +91,10 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => ['required', 'string', 'min:9', 'regex:/^\d+$/'], 
+            'phone' => ['nullable', 'string', 'min:9', 'regex:/^\d+$/'],
+            'nip' => 'nullable|string|max:50|unique:users,nip',
+            'pangkat_golongan' => 'nullable|string|max:255',
+            'jabatan' => 'nullable|string|max:255',
             'password' => [
                 'required',
                 'string',
@@ -101,7 +104,7 @@ class UserController extends Controller
             'role' => 'required|exists:roles,id',
         ]);
 
-        $user = $this->userService->create($request->name, $request->email, $request->phone, $request->password, $request->role);
+        $user = $this->userService->create($request->name, $request->email, $request->phone, $request->password, $request->role, $request->nip, $request->pangkat_golongan, $request->jabatan);
         if (!$user) {
             return Redirect::back()->with('error', 'Gagal menambah data pengguna.');
         }
@@ -135,7 +138,10 @@ class UserController extends Controller
                 'required', 'email',
                 Rule::unique('users')->ignore($user->id),
             ],
-            'phone' => ['required', 'string', 'min:9', 'regex:/^\d+$/'], 
+            'phone' => ['nullable', 'string', 'min:9', 'regex:/^\d+$/'],
+            'nip' => ['nullable', 'string', 'max:50', Rule::unique('users', 'nip')->ignore($user->id)],
+            'pangkat_golongan' => 'nullable|string|max:255',
+            'jabatan' => 'nullable|string|max:255',
             'password' => [
                 'nullable',
                 'string',
@@ -145,7 +151,7 @@ class UserController extends Controller
             'role' => 'required|exists:roles,id',
         ]);
 
-        $userUpdated = $this->userService->update($user, $request->name, $request->phone, $request->password, $request->role);
+        $userUpdated = $this->userService->update($user, $request->name, $request->phone, $request->password, $request->role, $request->nip, $request->pangkat_golongan, $request->jabatan);
         if (!$userUpdated) {
             return Redirect::back()->with('error', 'Gagal mengubah data pengguna.');
         }

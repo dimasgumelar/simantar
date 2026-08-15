@@ -43,6 +43,18 @@ export default function UsersShow({ user = {} }) {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>NIP</th>
+                                    <td>{user.nip ?? "-"}</td>
+                                </tr>
+                                <tr>
+                                    <th>Pangkat/Golongan</th>
+                                    <td>{user.pangkat_golongan ?? "-"}</td>
+                                </tr>
+                                <tr>
+                                    <th>Jabatan</th>
+                                    <td>{user.jabatan ?? "-"}</td>
+                                </tr>
+                                <tr>
                                     <th>Tanggal Ditambahkan</th>
                                     <td>{parseDateTime(user.created_at)}</td>
                                 </tr>

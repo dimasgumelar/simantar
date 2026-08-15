@@ -21,6 +21,9 @@ export default function UsersForm({ user = {}, roles, isEdit = false }) {
         email: "",
         password: "",
         role: "",
+        nip: "",
+        pangkat_golongan: "",
+        jabatan: "",
     });
 
     useEffect(() => {
@@ -32,6 +35,9 @@ export default function UsersForm({ user = {}, roles, isEdit = false }) {
                 email: user.email,
                 password: "",
                 role: user.roles.length > 0 ? user.roles[0].id : "",
+                nip: user.nip ?? "",
+                pangkat_golongan: user.pangkat_golongan ?? "",
+                jabatan: user.jabatan ?? "",
             });
         }
     }, [isEdit, user]);
@@ -84,13 +90,13 @@ export default function UsersForm({ user = {}, roles, isEdit = false }) {
                             error={errors.name}
                         />
                         <Input
-                            isRequired={true}
+                            isRequired={false}
                             type="text"
                             label="Telepon"
                             placeholder="Telepon"
                             value={data.phone}
                             onChange={(e) => setData("phone", e.target.value)}
-                            error={errors.name}
+                            error={errors.phone}
                         />
                         <Input
                             isRequired={true}
@@ -125,6 +131,35 @@ export default function UsersForm({ user = {}, roles, isEdit = false }) {
                             onChange={(e) => setData("role", e.target.value)}
                             error={errors.role}
                             list={roles}
+                        />
+                        <Input
+                            isRequired={false}
+                            type="text"
+                            label="NIP"
+                            placeholder="NIP (khusus ASN)"
+                            value={data.nip}
+                            onChange={(e) => setData("nip", e.target.value)}
+                            error={errors.nip}
+                        />
+                        <Input
+                            isRequired={false}
+                            type="text"
+                            label="Pangkat/Golongan"
+                            placeholder="Pangkat/Golongan (khusus ASN)"
+                            value={data.pangkat_golongan}
+                            onChange={(e) =>
+                                setData("pangkat_golongan", e.target.value)
+                            }
+                            error={errors.pangkat_golongan}
+                        />
+                        <Input
+                            isRequired={false}
+                            type="text"
+                            label="Jabatan"
+                            placeholder="Jabatan (khusus ASN)"
+                            value={data.jabatan}
+                            onChange={(e) => setData("jabatan", e.target.value)}
+                            error={errors.jabatan}
                         />
                         <FormButton
                             processing={processing}

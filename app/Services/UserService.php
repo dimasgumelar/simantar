@@ -27,18 +27,18 @@ class UserService
         return $this->userRepo->find($id);
     }
 
-    public function create($name, $email, $phone, $password, $roleId): User|null
+    public function create($name, $email, $phone, $password, $roleId, $nip = null, $pangkatGolongan = null, $jabatan = null): User|null
     {
         $role = $this->roleRepo->findOrFail($roleId);
         if (!$role) {
             return null;
         }
 
-        if (Str::startsWith($phone, '0')) {
+        if ($phone && Str::startsWith($phone, '0')) {
             $phone = '62' . substr($phone, 1);
         }
 
-        $user = $this->userRepo->create($name, $email, $phone, $password);
+        $user = $this->userRepo->create($name, $email, $phone, $password, $nip, $pangkatGolongan, $jabatan);
         if (!$user) {
             return null;
         }
@@ -48,13 +48,13 @@ class UserService
         return $user;
     }
 
-    public function update($user, $name, $phone, $password, $roleId)
+    public function update($user, $name, $phone, $password, $roleId, $nip = null, $pangkatGolongan = null, $jabatan = null)
     {
-        $userUpdated = $this->userRepo->update($user, $name, $phone, $password);
+        $userUpdated = $this->userRepo->update($user, $name, $phone, $password, $nip, $pangkatGolongan, $jabatan);
         if (!$userUpdated) {
             return null;
         }
-        
+
         $role = $this->roleRepo->find($roleId);
         if (!$role) {
             return null;

@@ -38,17 +38,20 @@ class UserRepository
         return User::find($id);
     }
 
-    public function create($name, $email, $phone, $password): User
+    public function create($name, $email, $phone, $password, $nip = null, $pangkatGolongan = null, $jabatan = null): User
     {
         return User::create([
             'name' => $name,
             'email' => $email,
             'phone' => $phone,
             'password' => Hash::make($password),
+            'nip' => $nip,
+            'pangkat_golongan' => $pangkatGolongan,
+            'jabatan' => $jabatan,
         ]);
     }
 
-    public function update($user, $name, $phone, $password)
+    public function update($user, $name, $phone, $password, $nip = null, $pangkatGolongan = null, $jabatan = null)
     {
         $user->update([
             'name' => $name,
@@ -57,6 +60,9 @@ class UserRepository
             'password' => $password
                 ? Hash::make($password)
                 : $user->password,
+            'nip' => $nip,
+            'pangkat_golongan' => $pangkatGolongan,
+            'jabatan' => $jabatan,
         ]);
 
         return $user;
