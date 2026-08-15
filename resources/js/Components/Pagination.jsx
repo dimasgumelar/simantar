@@ -1,16 +1,18 @@
 import { PAGE_SIZES } from "@/utils/constants";
 import { router } from "@inertiajs/react";
+import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 
 export default function Pagination({
     perPage = 10,
     handlePerPageChange,
     data = [],
 }) {
-    function paginationLabel(label) {
-        return label
-            .replace("pagination.previous", "<")
-            .replace("pagination.next", ">");
+    function renderLabel(label) {
+        if (label.includes("Previous")) return <FaAngleDoubleLeft />;
+        if (label.includes("Next")) return <FaAngleDoubleRight />;
+        return label;
     }
+
     return (
         <div className="my-4 flex">
             <select
@@ -31,9 +33,6 @@ export default function Pagination({
                         className={`join-item btn ${
                             link.active ? "btn-active" : ""
                         } ${!link.url ? "btn-disabled" : ""}`}
-                        dangerouslySetInnerHTML={{
-                            __html: paginationLabel(link.label),
-                        }}
                         onClick={() => {
                             if (link.url) {
                                 router.get(
@@ -46,7 +45,9 @@ export default function Pagination({
                                 );
                             }
                         }}
-                    ></button>
+                    >
+                        {renderLabel(link.label)}
+                    </button>
                 ))}
             </div>
         </div>
