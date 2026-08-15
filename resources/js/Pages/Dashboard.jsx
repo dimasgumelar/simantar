@@ -2,10 +2,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { BadgeRole } from "@/Components/Badge";
 import Roles from "@/utils/UserFromUsePage";
-import { Link } from "@inertiajs/react";
 
-export default function Dashboard({ maintenance, task }) {
-    const { userFromUsePage, role } = Roles();
+export default function Dashboard() {
+    const { userFromUsePage } = Roles();
 
     return (
         <AuthenticatedLayout
@@ -26,72 +25,6 @@ export default function Dashboard({ maintenance, task }) {
                     </div>
                 </div>
             </div>
-            {(role.hasAdmin || role.hasKetuaTim || role.hasTeknisi) && (
-                <Link href={route("maintenances.index")}>
-                    <div className="card bg-base-100 shadow-sm w-full">
-                        <div className="card-body">
-                            <h2 className="card-title">Pemeliharan</h2>
-                            <div className="stats shadow">
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">Menunggu</div>
-                                    <div className="stat-value text-error">
-                                        {maintenance.pending}
-                                    </div>
-                                </div>
-
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">
-                                        Dalam Proses
-                                    </div>
-                                    <div className="stat-value text-warning">
-                                        {maintenance.inprogress}
-                                    </div>
-                                </div>
-
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">Selesai</div>
-                                    <div className="stat-value text-success">
-                                        {maintenance.completed}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            )}
-            {(role.hasTeknisi || role.hasOperator) && (
-                <Link href={route("tasks.index")}>
-                    <div className="card bg-base-100 shadow-sm w-full">
-                        <div className="card-body">
-                            <h2 className="card-title">Task</h2>
-                            <div className="stats shadow">
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">Menunggu</div>
-                                    <div className="stat-value text-error">
-                                        {task.pending}
-                                    </div>
-                                </div>
-
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">
-                                        Dalam Proses
-                                    </div>
-                                    <div className="stat-value text-warning">
-                                        {task.inprogress}
-                                    </div>
-                                </div>
-
-                                <div className="stat place-items-center">
-                                    <div className="stat-title">Selesai</div>
-                                    <div className="stat-value text-success">
-                                        {task.completed}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Link>
-            )}
         </AuthenticatedLayout>
     );
 }

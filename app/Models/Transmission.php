@@ -19,9 +19,4 @@ class Transmission extends Model
         'description',
         'transmission_type',
     ];
-
-    public function inventories()
-    {
-        return $this->hasMany(Inventory::class);
-    }
 }
