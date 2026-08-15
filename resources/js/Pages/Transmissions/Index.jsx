@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Head, useForm } from "@inertiajs/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { FaCheckCircle, FaUsers } from "react-icons/fa";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import SortableHeader from "@/Components/SortableHeader";
 import Breadcrumbs from "@/Components/Breadcrumbs";
@@ -225,6 +225,18 @@ export default function TransmissionsIndex({ transmissions }) {
                                                                     )
                                                                 }
                                                             />
+                                                            <Link
+                                                                href={route(
+                                                                    "transmissions.users",
+                                                                    transmission.id
+                                                                )}
+                                                                className="btn btn-sm btn-warning"
+                                                            >
+                                                                <FaUsers />
+                                                                <span className="hidden sm:flex">
+                                                                    Pengguna
+                                                                </span>
+                                                            </Link>
                                                         </>
                                                     )}
                                                 </td>

@@ -44,6 +44,24 @@ class UserTransmissionRepository
         return $data;
     }
 
+    public function getUsersAvailableForTransmission($transmissionId, $perPage, $sortField, $sortDirection)
+    {
+        $users = User::whereNotIn('id', function ($query) use ($transmissionId) {
+            $query->select('user_id')
+                ->from('user_transmissions')
+                ->where('transmission_id', $transmissionId);
+        })
+        ->orderBy($sortField, $sortDirection);
+
+        if ($perPage > 0) {
+            $data = $users->paginate($perPage);
+        } else {
+            $data = $users->get();
+        }
+
+        return $data;
+    }
+
     public function getAllByTransmissionId($transmissionId, $perPage, $sortField, $sortDirection)
     {
         $query = DB::table('user_transmissions')

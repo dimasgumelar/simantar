@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
         $ketuaTimRole = Role::firstOrCreate(['name' => 'ketua tim']);
         $teknisiRole = Role::firstOrCreate(['name' => 'teknisi']);
         $operatorRole = Role::firstOrCreate(['name' => 'operator']);
+        $koordinatorRole = Role::firstOrCreate(['name' => 'koordinator']);
 
         // Buat user
         $user = User::create([

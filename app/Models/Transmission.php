@@ -18,5 +18,16 @@ class Transmission extends Model
         'photo_path',
         'description',
         'transmission_type',
+        'koordinator_id',
     ];
+
+    public function koordinator()
+    {
+        return $this->belongsTo(User::class, 'koordinator_id');
+    }
+
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class);
+    }
 }

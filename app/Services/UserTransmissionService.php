@@ -33,7 +33,12 @@ class UserTransmissionService
 
     public function getAllByTransmissionId($transmissionId, $perPage, $sortField, $sortDirection)
     {
-        return $this->userTransmissionRepo->getAllByTransmissionId($transmissionId, 0, $sortField, $sortDirection);
+        return $this->userTransmissionRepo->getAllByTransmissionId($transmissionId, $perPage, $sortField, $sortDirection);
+    }
+
+    public function getUsersAvailableForTransmission($transmissionId, $perPage, $sortField, $sortDirection)
+    {
+        return $this->userTransmissionRepo->getUsersAvailableForTransmission($transmissionId, $perPage, $sortField, $sortDirection);
     }
 
     public function getById($id)

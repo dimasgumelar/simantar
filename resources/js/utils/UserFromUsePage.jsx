@@ -15,6 +15,9 @@ export default function Roles() {
         hasOperator: userFromUsePage.roles.some(
             (role) => role.name === "operator"
         ),
+        hasKoordinator: userFromUsePage.roles.some(
+            (role) => role.name === "koordinator"
+        ),
     };
 
     return { userFromUsePage, role };

@@ -11,6 +11,7 @@ import { BreadcrumbsTransmisi } from "@/Pages/Transmissions/Constant";
 export default function TransmissionForm({
     transmission = {},
     isEdit = false,
+    linkedUsers = [],
 }) {
     const breadcrumbs = [<BreadcrumbsTransmisi />, isEdit ? "Ubah" : "Tambah"];
 
@@ -25,6 +26,7 @@ export default function TransmissionForm({
         photo: null,
         photo_path: null,
         is_active: 1,
+        koordinator_id: "",
     });
 
     useEffect(() => {
@@ -38,6 +40,7 @@ export default function TransmissionForm({
                 photo: null,
                 photo_path: transmission.photo_path || null,
                 is_active: transmission.is_active,
+                koordinator_id: transmission.koordinator_id || "",
             });
             setPreviewUrl(
                 transmission.photo_path
@@ -137,6 +140,21 @@ export default function TransmissionForm({
                             labelKey="label"
                             idKey="value"
                         />
+                        {isEdit && (
+                            <InputDropdownManual
+                                label="Koordinator"
+                                value={data.koordinator_id}
+                                onChange={(e) =>
+                                    setData("koordinator_id", e.target.value)
+                                }
+                                error={errors.koordinator_id}
+                                list={[
+                                    { user_id: "", name: "Tidak ada" },
+                                    ...linkedUsers,
+                                ]}
+                                idKey="user_id"
+                            />
+                        )}
                         <Input
                             type="text"
                             label="Alamat"

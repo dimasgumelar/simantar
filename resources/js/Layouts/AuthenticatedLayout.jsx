@@ -1,6 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import { FaHome, FaUser, FaBroadcastTower } from "react-icons/fa";
+import { FaHome, FaUser, FaBroadcastTower, FaBook } from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
 export default function AuthenticatedLayout({ children }) {
@@ -12,7 +12,7 @@ export default function AuthenticatedLayout({ children }) {
             label: "Beranda",
             icon: <FaHome />,
             routeStr: "dashboard",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
+            roles: ["admin", "ketua tim", "teknisi", "operator", "koordinator"],
         },
         {
             label: "Pengguna",
@@ -24,7 +24,13 @@ export default function AuthenticatedLayout({ children }) {
             label: "Transmisi",
             icon: <FaBroadcastTower />,
             routeStr: "transmissions.index",
-            roles: ["admin", "ketua tim", "teknisi", "operator"],
+            roles: ["admin", "ketua tim", "teknisi", "operator", "koordinator"],
+        },
+        {
+            label: "Logbook",
+            icon: <FaBook />,
+            routeStr: "logbooks.index",
+            roles: ["admin", "ketua tim", "teknisi", "operator", "koordinator"],
         },
     ];
     const userRoleNames =

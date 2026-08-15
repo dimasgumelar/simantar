@@ -48,6 +48,10 @@ export default function TransmissionsShow({ transmission = {} }) {
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>Koordinator</th>
+                                    <td>{transmission.koordinator?.name ?? "-"}</td>
+                                </tr>
+                                <tr>
                                     <th>Alamat</th>
                                     <td>{transmission.address}</td>
                                 </tr>

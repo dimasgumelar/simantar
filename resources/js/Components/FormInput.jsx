@@ -191,9 +191,9 @@ export function InputDropdownManual({
                             filteredList.map((item) => (
                                 <li
                                     key={item[idKey]}
-                                    className={`px-3 py-2 cursor-pointer hover:bg-primary ${
+                                    className={`px-3 py-2 cursor-pointer hover:bg-primary hover:text-primary-content ${
                                         value === item[idKey]
-                                            ? "bg-primary"
+                                            ? "bg-primary text-primary-content"
                                             : ""
                                     }`}
                                     onClick={() => {

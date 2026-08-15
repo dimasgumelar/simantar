@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transmission;
 use App\Services\ExportService;
 use App\Services\TransmissionService;
+use App\Services\UserTransmissionService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,11 +13,13 @@ class TransmissionController extends Controller
 {
     protected $transmissionService;
     protected $exportService;
+    protected $userTransmissionService;
 
-    public function __construct(TransmissionService $transmissionService, ExportService $exportService)
+    public function __construct(TransmissionService $transmissionService, ExportService $exportService, UserTransmissionService $userTransmissionService)
     {
         $this->transmissionService = $transmissionService;
         $this->exportService = $exportService;
+        $this->userTransmissionService = $userTransmissionService;
     }
     public function index(Request $request)
     {
@@ -102,7 +105,7 @@ class TransmissionController extends Controller
     public function show(Transmission $transmission)
     {
         return Inertia::render('Transmissions/Show', [
-            'transmission' => $transmission,
+            'transmission' => $transmission->load('koordinator'),
         ]);
     }
 
@@ -111,11 +114,14 @@ class TransmissionController extends Controller
         return Inertia::render('Transmissions/Form', [
             'transmission' => $transmission,
             'isEdit' => true,
+            'linkedUsers' => $this->userTransmissionService->getAllByTransmissionId($transmission->id, 0, 'name', 'ASC'),
         ]);
     }
 
     public function update(Request $request, Transmission $transmission)
     {
+        $request->merge(['koordinator_id' => $request->koordinator_id ?: null]);
+
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'nullable|string',
@@ -127,6 +133,7 @@ class TransmissionController extends Controller
             'photo_path' => 'nullable|string',
             'description' => 'nullable|string',
             'transmission_type' => 'nullable|string|max:50',
+            'koordinator_id' => 'nullable|exists:users,id',
         ]);
 
         $transmissionUpdated = $this->transmissionService->update($transmission, $data, $request->file('photo') ?? null);

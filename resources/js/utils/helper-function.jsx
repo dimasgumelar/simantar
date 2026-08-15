@@ -49,6 +49,21 @@ export function parseConditionClass(params) {
     return "badge-error";
 }
 
+export function parseDate(params) {
+    if (params) {
+        const date = new Date(params);
+
+        return date.toLocaleString("id-ID", {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        });
+    } else {
+        return "-";
+    }
+}
+
 export function parseDateTime(params) {
     if (params) {
         const date = new Date(params);
