@@ -6,7 +6,7 @@ export default function GuestLayout({ children }) {
             <Link href="/" className="flex flex-col items-center mb-6 text-center">
                 <div className="text-4xl font-bold">SIMANTAR</div>
                 <div className="text-sm opacity-70 mt-1">
-                    Sistem Informasi Maintenance Alat Transmisi
+                    Sistem Informasi Manajemen Transmisi
                 </div>
             </Link>
 

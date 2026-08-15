@@ -5,10 +5,17 @@ import Breadcrumbs from "@/Components/Breadcrumbs";
 import { DownloadDropdownButton } from "@/Components/Button";
 import { InputDropdownManual } from "@/Components/FormInput";
 import { DateInput } from "@/Components/Flatpickr";
-import { inertiaGet } from "@/utils/helper-function";
+import { inertiaGet, parseDate } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
 import PowerList from "./Partials/PowerList";
+
+function todayStr() {
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${date.getFullYear()}-${month}-${day}`;
+}
 
 export default function LogbooksDayView({
     transmissions,
@@ -17,11 +24,14 @@ export default function LogbooksDayView({
     logbook,
     copyableLogbooks,
 }) {
-    const breadcrumbs = [<BreadcrumbsLogbooks />, "Hari Ini"];
-
     const [selectedTransmission, setSelectedTransmission] =
         useState(transmissionId);
     const [selectedDate, setSelectedDate] = useState(tanggal);
+
+    const breadcrumbs = [
+        <BreadcrumbsLogbooks />,
+        selectedDate === todayStr() ? "Hari Ini" : parseDate(selectedDate),
+    ];
 
     function applyFilters(overrides = {}) {
         inertiaGet("logbooks.index", {
