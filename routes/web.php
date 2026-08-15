@@ -66,6 +66,7 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator|koordinator'])
     Route::get('/logbooks', [LogbookController::class, 'index'])->name('logbooks.index');
     Route::get('/logbooks/{logbook}/view', [LogbookController::class, 'show'])->name('logbooks.view');
     Route::get('/logbooks/{logbook}/pdf', [LogbookController::class, 'pdf'])->name('logbooks.pdf');
+    Route::get('/logbooks/{logbook}/csv', [LogbookController::class, 'csv'])->name('logbooks.csv');
 });
 
 Route::middleware(['auth', 'role:operator|koordinator'])->group(function () {

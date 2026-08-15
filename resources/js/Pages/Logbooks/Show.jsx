@@ -2,7 +2,7 @@ import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Breadcrumbs from "@/Components/Breadcrumbs";
-import { DownloadButton } from "@/Components/Button";
+import { DownloadDropdownButton } from "@/Components/Button";
 import { parseDate } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
@@ -22,6 +22,10 @@ export default function LogbooksShow({ logbook, copyableLogbooks }) {
         window.location.href = route("logbooks.pdf", logbook.id);
     }
 
+    function handleDownloadCsv() {
+        window.location.href = route("logbooks.csv", logbook.id);
+    }
+
     return (
         <AuthenticatedLayout>
             <Head title="Logbook" />
@@ -30,9 +34,11 @@ export default function LogbooksShow({ logbook, copyableLogbooks }) {
                 <div className="card-body">
                     <div className="flex items-center justify-between">
                         <Breadcrumbs list={breadcrumbs} />
-                        <DownloadButton
-                            onClick={handleDownloadPdf}
-                            label="Unduh PDF"
+                        <DownloadDropdownButton
+                            options={[
+                                { label: "PDF", onClick: handleDownloadPdf },
+                                { label: "CSV", onClick: handleDownloadCsv },
+                            ]}
                         />
                     </div>
 

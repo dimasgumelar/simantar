@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Head, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Breadcrumbs from "@/Components/Breadcrumbs";
-import { DownloadButton } from "@/Components/Button";
+import { DownloadDropdownButton } from "@/Components/Button";
 import { InputDropdownManual } from "@/Components/FormInput";
 import { DateInput } from "@/Components/Flatpickr";
 import { inertiaGet } from "@/utils/helper-function";
@@ -53,6 +53,10 @@ export default function LogbooksDayView({
         window.location.href = route("logbooks.pdf", logbook.id);
     }
 
+    function handleDownloadCsv() {
+        window.location.href = route("logbooks.csv", logbook.id);
+    }
+
     return (
         <AuthenticatedLayout>
             <Head title="Logbook" />
@@ -61,9 +65,17 @@ export default function LogbooksDayView({
                     <div className="flex items-center justify-between">
                         <Breadcrumbs list={breadcrumbs} />
                         {logbook && (
-                            <DownloadButton
-                                onClick={handleDownloadPdf}
-                                label="Unduh PDF"
+                            <DownloadDropdownButton
+                                options={[
+                                    {
+                                        label: "PDF",
+                                        onClick: handleDownloadPdf,
+                                    },
+                                    {
+                                        label: "CSV",
+                                        onClick: handleDownloadCsv,
+                                    },
+                                ]}
                             />
                         )}
                     </div>

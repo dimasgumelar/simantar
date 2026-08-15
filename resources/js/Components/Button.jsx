@@ -49,3 +49,24 @@ export function DownloadButton({ onClick, label = "Unduh" }) {
         </button>
     );
 }
+
+export function DownloadDropdownButton({ options }) {
+    return (
+        <div className="dropdown dropdown-end mr-2">
+            <div tabIndex={0} role="button" className="btn btn-neutral">
+                <FaDownload />
+                <span className="hidden sm:flex">Unduh</span>
+            </div>
+            <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-2 w-36 p-2 shadow"
+            >
+                {options.map((option) => (
+                    <li key={option.label}>
+                        <a onClick={option.onClick}>{option.label}</a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}

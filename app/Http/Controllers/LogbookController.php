@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Logbook;
+use App\Services\ExportService;
 use App\Services\LogbookService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -12,10 +14,12 @@ use Inertia\Inertia;
 class LogbookController extends Controller
 {
     protected $logbookService;
+    protected $exportService;
 
-    public function __construct(LogbookService $logbookService)
+    public function __construct(LogbookService $logbookService, ExportService $exportService)
     {
         $this->logbookService = $logbookService;
+        $this->exportService = $exportService;
     }
 
     public function index(Request $request)
@@ -106,6 +110,49 @@ class LogbookController extends Controller
         $filename = 'logbook-' . str($logbook->transmission->name)->slug() . '-' . $logbook->tanggal->format('Y-m-d') . '.pdf';
 
         return $pdf->download($filename);
+    }
+
+    public function csv(Logbook $logbook)
+    {
+        $logbook = $this->logbookService->getById($logbook->id);
+
+        $fileName = 'logbook-' . str($logbook->transmission->name)->slug() . '-' . $logbook->tanggal->format('Y-m-d') . '.csv';
+
+        $callback = function () use ($logbook) {
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, ['Logbook Siaran']);
+            fputcsv($handle, ['Transmisi', $logbook->transmission->name]);
+            fputcsv($handle, ['Tanggal', $logbook->tanggal->format('Y-m-d')]);
+            fputcsv($handle, ['Petugas', $logbook->petugasList->map(
+                fn ($petugas) => $petugas->name . ' (TTD ' . Carbon::parse($petugas->pivot->signed_at)->format('Y-m-d H:i') . ')'
+            )->join('; ')]);
+            fputcsv($handle, []);
+
+            fputcsv($handle, ['Power Transmisi']);
+            fputcsv($handle, ['Watt', 'Waktu']);
+            foreach ($logbook->powers as $power) {
+                fputcsv($handle, [$power->power, Carbon::parse($power->created_at)->format('Y-m-d H:i')]);
+            }
+            fputcsv($handle, []);
+
+            fputcsv($handle, ['Acara']);
+            fputcsv($handle, ['No', 'Jam Mulai', 'Jam Selesai', 'Acara']);
+            foreach ($logbook->events as $index => $event) {
+                fputcsv($handle, [$index + 1, substr($event->start_time, 0, 5), substr($event->end_time, 0, 5), $event->name]);
+            }
+            fputcsv($handle, []);
+
+            fputcsv($handle, ['Keterangan']);
+            fputcsv($handle, ['No', 'Kategori', 'Jam Mulai', 'Jam Akhir', 'Catatan']);
+            foreach ($logbook->notes as $index => $note) {
+                fputcsv($handle, [$index + 1, ucfirst($note->category), substr($note->start_time, 0, 5), substr($note->end_time, 0, 5), $note->notes]);
+            }
+
+            fclose($handle);
+        };
+
+        return $this->exportService->export($fileName, $callback);
     }
 
     public function sign(Logbook $logbook, Request $request)
