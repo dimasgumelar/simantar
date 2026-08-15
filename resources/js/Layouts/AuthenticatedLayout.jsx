@@ -1,11 +1,11 @@
-import { Link, router, usePage } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { FaHome, FaUser, FaBroadcastTower } from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
 export default function AuthenticatedLayout({ children }) {
     const { props } = usePage();
-    const userFromUsePage = props.user;
+    const userFromUsePage = props.auth.user;
 
     const menuItems = [
         {
@@ -37,14 +37,6 @@ export default function AuthenticatedLayout({ children }) {
     useEffect(() => {
         localStorage.setItem("sidebar-open", JSON.stringify(open));
     }, [open]);
-
-    const handleLogout = () => {
-        router.post(route("logout"), {
-            onSuccess: () => {
-                window.location.reload();
-            },
-        });
-    };
 
     return (
         <div className="flex h-screen">
@@ -196,14 +188,19 @@ export default function AuthenticatedLayout({ children }) {
                         >
                             <li>
                                 <Link
-                                    className="justify-between"
                                     href={route("profile.edit")}
+                                    className="text-base-content"
                                 >
                                     Profil
                                 </Link>
                             </li>
                             <li>
-                                <Link as="button" onClick={handleLogout}>
+                                <Link
+                                    href={route("logout")}
+                                    method="post"
+                                    onSuccess={() => window.location.reload()}
+                                    className="text-base-content"
+                                >
                                     Keluar
                                 </Link>
                             </li>
