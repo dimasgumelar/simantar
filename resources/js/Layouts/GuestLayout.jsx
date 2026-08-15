@@ -1,21 +1,17 @@
-import ApplicationLogo from "@/Components/ApplicationLogo";
 import { Link } from "@inertiajs/react";
 
 export default function GuestLayout({ children }) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900">
-            <div>
-                <Link href="/" className="flex flex-col flex-wrap items-center">
-                    <div className="text-4xl">SIMANTAR</div>
-                    <div className="text-1xl">
-                        Sistem Informasi Maintenance Alat Transmisi
-                    </div>
-                    {/* <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" /> */}
-                </Link>
-            </div>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-base-200 px-4 py-6">
+            <Link href="/" className="flex flex-col items-center mb-6 text-center">
+                <div className="text-4xl font-bold">SIMANTAR</div>
+                <div className="text-sm opacity-70 mt-1">
+                    Sistem Informasi Maintenance Alat Transmisi
+                </div>
+            </Link>
 
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg dark:bg-gray-800">
-                {children}
+            <div className="card bg-base-100 shadow-sm w-full sm:max-w-md">
+                <div className="card-body">{children}</div>
             </div>
         </div>
     );

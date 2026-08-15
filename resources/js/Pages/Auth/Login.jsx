@@ -1,23 +1,9 @@
-import Checkbox from "@/Components/Checkbox";
-import InputError from "@/Components/InputError";
-import InputLabel from "@/Components/InputLabel";
-import PrimaryButton from "@/Components/PrimaryButton";
-import TextInput from "@/Components/TextInput";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-// import { useUser } from "@/utils/UserContext";
-// import { useEffect } from "react";
 
 export default function Login({ status, canResetPassword }) {
-    // const { setUser } = useUser();
-
-    // useEffect(() => {
-    //     // setUser(null);
-    //     localStorage.removeItem("user");
-    // }, []);
-
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: "",
+        login: "",
         password: "",
         remember: false,
     });
@@ -38,74 +24,88 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Log in" />
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
-                    {status}
+                <div role="alert" className="alert alert-success mb-4">
+                    <span>{status}</span>
                 </div>
             )}
 
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="space-y-4">
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
+                    <label className="label block mb-2" htmlFor="login">
+                        Email atau NIP
+                    </label>
+                    <input
+                        id="login"
+                        type="text"
+                        name="login"
+                        className="input w-full"
+                        value={data.login}
                         autoComplete="username"
-                        isFocused={true}
-                        onChange={(e) => setData("email", e.target.value)}
+                        autoFocus
+                        onChange={(e) => setData("login", e.target.value)}
                     />
-
-                    <InputError message={errors.email} className="mt-2" />
+                    {errors.login && (
+                        <div className="text-error text-sm mt-1">
+                            {errors.login}
+                        </div>
+                    )}
                 </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Kata Sandi" />
-
-                    <TextInput
+                <div>
+                    <label className="label block mb-2" htmlFor="password">
+                        Kata Sandi
+                    </label>
+                    <input
                         id="password"
                         type="password"
                         name="password"
+                        className="input w-full"
                         value={data.password}
-                        className="mt-1 block w-full"
                         autoComplete="current-password"
                         onChange={(e) => setData("password", e.target.value)}
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
+                    {errors.password && (
+                        <div className="text-error text-sm mt-1">
+                            {errors.password}
+                        </div>
+                    )}
                 </div>
 
-                <div className="mt-4 block">
-                    <label className="flex items-center">
-                        <Checkbox
+                <div className="flex items-center justify-between">
+                    <label className="label cursor-pointer gap-2">
+                        <input
+                            type="checkbox"
                             name="remember"
+                            className="checkbox checkbox-sm"
                             checked={data.remember}
                             onChange={(e) =>
                                 setData("remember", e.target.checked)
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
-                            Ingat Saya
-                        </span>
+                        <span className="label-text">Ingat Saya</span>
                     </label>
-                </div>
 
-                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route("password.request")}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                            className="link link-hover text-sm"
                         >
-                            Forgot your password?
+                            Lupa kata sandi?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Masuk
-                    </PrimaryButton>
                 </div>
+
+                <button
+                    type="submit"
+                    className="btn btn-primary w-full"
+                    disabled={processing}
+                >
+                    {processing ? (
+                        <span className="loading loading-spinner loading-sm"></span>
+                    ) : (
+                        "Masuk"
+                    )}
+                </button>
             </form>
         </GuestLayout>
     );
