@@ -47,7 +47,11 @@ function clusterOverlapping(items) {
     return clusters;
 }
 
-export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
+export default function LogbookDetail({
+    logbook,
+    copyableLogbooks = [],
+    eventNameSuggestions = [],
+}) {
     const { userFromUsePage, role } = Roles();
 
     const canManage = role.hasOperator || role.hasKoordinator;
@@ -510,6 +514,7 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                     onClose={closeForm}
                     logbookId={logbook.id}
                     event={formEvent}
+                    nameSuggestions={eventNameSuggestions}
                 />
             )}
 

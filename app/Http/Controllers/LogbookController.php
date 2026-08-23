@@ -64,6 +64,7 @@ class LogbookController extends Controller
             'tanggal' => $tanggal,
             'logbook' => $logbook,
             'copyableLogbooks' => $logbook ? $this->logbookService->getCopyableLogbooks($logbook) : [],
+            'eventNameSuggestions' => $transmissionId ? $this->logbookService->getEventNameSuggestions($transmissionId) : [],
         ]);
     }
 
@@ -97,6 +98,7 @@ class LogbookController extends Controller
         return Inertia::render('Logbooks/Show', [
             'logbook' => $logbook,
             'copyableLogbooks' => $this->logbookService->getCopyableLogbooks($logbook),
+            'eventNameSuggestions' => $this->logbookService->getEventNameSuggestions($logbook->transmission_id),
         ]);
     }
 

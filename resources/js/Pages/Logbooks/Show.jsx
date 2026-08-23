@@ -9,7 +9,11 @@ import LogbookDetail from "./Partials/LogbookDetail";
 import PowerList from "./Partials/PowerList";
 import Roles from "@/utils/UserFromUsePage";
 
-export default function LogbooksShow({ logbook, copyableLogbooks }) {
+export default function LogbooksShow({
+    logbook,
+    copyableLogbooks,
+    eventNameSuggestions = [],
+}) {
     const { role } = Roles();
     const canManage = role.hasOperator || role.hasKoordinator;
 
@@ -69,6 +73,7 @@ export default function LogbooksShow({ logbook, copyableLogbooks }) {
                     <LogbookDetail
                         logbook={logbook}
                         copyableLogbooks={copyableLogbooks}
+                        eventNameSuggestions={eventNameSuggestions}
                     />
 
                     <div className="flex justify-end mt-4">

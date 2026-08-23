@@ -23,6 +23,7 @@ export default function LogbooksDayView({
     tanggal,
     logbook,
     copyableLogbooks,
+    eventNameSuggestions = [],
 }) {
     const [selectedTransmission, setSelectedTransmission] =
         useState(transmissionId);
@@ -148,6 +149,7 @@ export default function LogbooksDayView({
                         <LogbookDetail
                             logbook={logbook}
                             copyableLogbooks={copyableLogbooks}
+                            eventNameSuggestions={eventNameSuggestions}
                         />
                     ) : (
                         <div className="mt-6 flex flex-col items-center gap-3 py-8 text-center">

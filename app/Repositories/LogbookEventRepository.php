@@ -36,4 +36,13 @@ class LogbookEventRepository
             ->where('end_time', '>', $startTime)
             ->exists();
     }
+
+    public function distinctNamesByTransmissionId($transmissionId)
+    {
+        return LogbookEvent::whereHas('logbook', fn ($query) => $query->where('transmission_id', $transmissionId))
+            ->select('name')
+            ->distinct()
+            ->orderBy('name')
+            ->pluck('name');
+    }
 }

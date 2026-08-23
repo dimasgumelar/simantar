@@ -4,7 +4,13 @@ import Modal from "@/Components/Modal";
 import { Input } from "@/Components/FormInput";
 import { TimeInput } from "@/Components/Flatpickr";
 
-export default function EventFormModal({ show, onClose, logbookId, event = null }) {
+export default function EventFormModal({
+    show,
+    onClose,
+    logbookId,
+    event = null,
+    nameSuggestions = [],
+}) {
     const isEdit = !!event;
     const { data, setData, post, processing, errors, reset, clearErrors } =
         useForm({
@@ -56,7 +62,13 @@ export default function EventFormModal({ show, onClose, logbookId, event = null 
                     value={data.name}
                     onChange={(e) => setData("name", e.target.value)}
                     error={errors.name}
+                    list="event-name-suggestions"
                 />
+                <datalist id="event-name-suggestions">
+                    {nameSuggestions.map((name) => (
+                        <option key={name} value={name} />
+                    ))}
+                </datalist>
                 <TimeInput
                     isRequired={true}
                     label="Jam Mulai"

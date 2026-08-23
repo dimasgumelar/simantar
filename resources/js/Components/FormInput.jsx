@@ -13,6 +13,7 @@ export const Input = forwardRef(function Input(
         error,
         disabled = false,
         className = "",
+        list,
     },
     ref
 ) {
@@ -33,6 +34,7 @@ export const Input = forwardRef(function Input(
                 value={value}
                 onChange={onChange}
                 disabled={disabled}
+                list={list}
             />
             {error && <div className="text-error text-sm mt-1">{error}</div>}
         </div>

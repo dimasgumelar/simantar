@@ -106,6 +106,11 @@ class LogbookService
         return $this->logbookEventRepo->delete($event);
     }
 
+    public function getEventNameSuggestions($transmissionId)
+    {
+        return $this->logbookEventRepo->distinctNamesByTransmissionId($transmissionId);
+    }
+
     public function addNote($logbookId, $category, $startTime, $endTime, $notes)
     {
         return $this->logbookNoteRepo->create([
