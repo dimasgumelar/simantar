@@ -48,6 +48,7 @@ export function DateInput({
     label = "",
     isRequired = false,
     error,
+    size = "",
 }) {
     return (
         <div>
@@ -70,7 +71,7 @@ export function DateInput({
                     allowInput: true,
                 }}
                 placeholder={placeholder}
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${size}`}
             />
             {error && <div className="text-error text-sm mt-1">{error}</div>}
         </div>

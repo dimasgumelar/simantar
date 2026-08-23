@@ -6,10 +6,11 @@ export default function TableDropdown({
     toggleItem,
     keyId = "id",
     keyValue = "name",
+    size = "",
 }) {
     return (
         <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-neutral ml-2">
+            <div tabIndex={0} role="button" className={`btn btn-neutral ${size}`}>
                 {icon}
                 <span className="hidden sm:flex">{title}</span>
             </div>
