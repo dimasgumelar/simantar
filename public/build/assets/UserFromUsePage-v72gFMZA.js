@@ -1,1 +1,0 @@
-import{q as a}from"./app-CakXegVC.js";function n(){const{props:o}=a(),s=o.user,r={hasAdmin:s.roles.some(e=>e.name==="admin"),hasKetuaTim:s.roles.some(e=>e.name==="ketua tim"),hasTeknisi:s.roles.some(e=>e.name==="teknisi"),hasOperator:s.roles.some(e=>e.name==="operator")};return{userFromUsePage:s,role:r}}export{n as R};

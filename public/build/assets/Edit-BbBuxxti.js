@@ -1,1 +1,0 @@
-import{j as t,$ as o}from"./app-CakXegVC.js";import{A as r}from"./AuthenticatedLayout-D8MZLXph.js";import i from"./UpdatePasswordForm-DZ84zo3C.js";import s from"./UpdateProfileInformationForm-BuVx5CFN.js";function n(){return t.jsxs(r,{children:[t.jsx(o,{title:"Profil"}),t.jsx(s,{}),t.jsx(i,{})]})}export{n as default};
