@@ -7,6 +7,7 @@ import { parseDateTime } from "@/utils/helper-function";
 import EventFormModal from "./EventFormModal";
 import CopyEventsModal from "./CopyEventsModal";
 import NoteFormModal from "./NoteFormModal";
+import DetailModal from "./DetailModal";
 import { noteCategoryLabel } from "@/Pages/Logbooks/Constant";
 
 const PX_PER_MINUTE = 2;
@@ -67,6 +68,19 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
     const noteModalRef = useRef(null);
 
     const { delete: destroy } = useForm();
+
+    const [viewItem, setViewItem] = useState(null);
+    const viewModalRef = useRef(null);
+
+    const openViewModal = (type, data) => {
+        setViewItem({ type, data });
+        viewModalRef.current.showModal();
+    };
+
+    const closeViewModal = () => {
+        viewModalRef.current.close();
+        setViewItem(null);
+    };
 
     const openCreateForm = () => {
         setFormEvent(null);
@@ -266,11 +280,12 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                         {logbook.events.map((event) => (
                             <div
                                 key={event.id}
-                                className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden"
+                                className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden cursor-pointer"
                                 style={cardStyle(
                                     event.start_time,
                                     event.end_time
                                 )}
+                                onClick={() => openViewModal("event", event)}
                             >
                                 <div className="card-body p-2 sm:p-3">
                                     <div className="flex items-start justify-between gap-2">
@@ -287,19 +302,21 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                                             <div className="flex shrink-0 gap-1">
                                                 <button
                                                     className="btn btn-xs btn-success"
-                                                    onClick={() =>
-                                                        openEditForm(event)
-                                                    }
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openEditForm(event);
+                                                    }}
                                                 >
                                                     <FaEdit />
                                                 </button>
                                                 <button
                                                     className="btn btn-xs btn-error"
-                                                    onClick={() =>
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         openDeleteModal(
                                                             event.id
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                 >
                                                     <FaTrash />
                                                 </button>
@@ -317,11 +334,12 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                         {logbook.notes.map((note) => (
                             <div
                                 key={note.id}
-                                className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden"
+                                className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden cursor-pointer"
                                 style={cardStyle(
                                     note.start_time,
                                     note.end_time
                                 )}
+                                onClick={() => openViewModal("note", note)}
                             >
                                 <div className="card-body p-2 sm:p-3">
                                     <div className="flex items-start justify-between gap-2">
@@ -349,19 +367,23 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                                             <div className="flex shrink-0 gap-1">
                                                 <button
                                                     className="btn btn-xs btn-success"
-                                                    onClick={() =>
-                                                        openEditNoteForm(note)
-                                                    }
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        openEditNoteForm(
+                                                            note
+                                                        );
+                                                    }}
                                                 >
                                                     <FaEdit />
                                                 </button>
                                                 <button
                                                     className="btn btn-xs btn-error"
-                                                    onClick={() =>
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
                                                         openDeleteNoteModal(
                                                             note.id
-                                                        )
-                                                    }
+                                                        );
+                                                    }}
                                                 >
                                                     <FaTrash />
                                                 </button>
@@ -401,6 +423,12 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                     note={formNote}
                 />
             )}
+
+            <DetailModal
+                modalRef={viewModalRef}
+                onClose={closeViewModal}
+                item={viewItem}
+            />
 
             <DeleteModal
                 modalRef={modalRef}
