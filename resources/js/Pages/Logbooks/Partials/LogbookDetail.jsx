@@ -8,6 +8,7 @@ import EventFormModal from "./EventFormModal";
 import CopyEventsModal from "./CopyEventsModal";
 import NoteFormModal from "./NoteFormModal";
 import DetailModal from "./DetailModal";
+import NotesGroupModal from "./NotesGroupModal";
 import { noteCategoryLabel } from "@/Pages/Logbooks/Constant";
 
 const PX_PER_MINUTE = 2;
@@ -16,6 +17,34 @@ const MIN_CARD_HEIGHT = 56;
 function toMinutes(time) {
     const [hours, minutes] = time.split(":").map(Number);
     return hours * 60 + minutes;
+}
+
+function formatMinutes(total) {
+    const hours = Math.floor(total / 60)
+        .toString()
+        .padStart(2, "0");
+    const minutes = (total % 60).toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}
+
+// Merges notes with intersecting time ranges into clusters so a busy
+// timeslot renders as a single "stack" card instead of many cramped ones.
+function clusterOverlapping(items) {
+    const sorted = [...items].sort(
+        (a, b) => a.start - b.start || a.end - b.end
+    );
+    const clusters = [];
+    let current = null;
+    for (const item of sorted) {
+        if (current && item.start < current.end) {
+            current.items.push(item);
+            current.end = Math.max(current.end, item.end);
+        } else {
+            current = { start: item.start, end: item.end, items: [item] };
+            clusters.push(current);
+        }
+    }
+    return clusters;
 }
 
 export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
@@ -44,17 +73,24 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
     if (axisEnd <= axisStart) axisEnd = axisStart + 60;
     const axisHeight = (axisEnd - axisStart) * PX_PER_MINUTE;
 
-    const cardStyle = (startTime, endTime) => {
-        const start = toMinutes(startTime);
-        const end = toMinutes(endTime);
-        return {
-            top: `${(start - axisStart) * PX_PER_MINUTE}px`,
-            minHeight: `${Math.max(
-                (end - start) * PX_PER_MINUTE,
-                MIN_CARD_HEIGHT
-            )}px`,
-        };
-    };
+    const cardStyleMinutes = (start, end) => ({
+        top: `${(start - axisStart) * PX_PER_MINUTE}px`,
+        minHeight: `${Math.max(
+            (end - start) * PX_PER_MINUTE,
+            MIN_CARD_HEIGHT
+        )}px`,
+    });
+
+    const cardStyle = (startTime, endTime) =>
+        cardStyleMinutes(toMinutes(startTime), toMinutes(endTime));
+
+    const noteClusters = clusterOverlapping(
+        logbook.notes.map((note) => ({
+            note,
+            start: toMinutes(note.start_time),
+            end: toMinutes(note.end_time),
+        }))
+    );
 
     const [formEvent, setFormEvent] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -80,6 +116,29 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
     const closeViewModal = () => {
         viewModalRef.current.close();
         setViewItem(null);
+    };
+
+    const [noteGroup, setNoteGroup] = useState([]);
+    const noteGroupModalRef = useRef(null);
+
+    const openNoteGroup = (notes) => {
+        setNoteGroup(notes);
+        noteGroupModalRef.current.showModal();
+    };
+
+    const closeNoteGroup = () => {
+        noteGroupModalRef.current.close();
+        setNoteGroup([]);
+    };
+
+    const editNoteFromGroup = (note) => {
+        closeNoteGroup();
+        openEditNoteForm(note);
+    };
+
+    const deleteNoteFromGroup = (id) => {
+        closeNoteGroup();
+        openDeleteNoteModal(id);
     };
 
     const openCreateForm = () => {
@@ -331,68 +390,116 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                         className="relative"
                         style={{ height: `${axisHeight}px` }}
                     >
-                        {logbook.notes.map((note) => (
-                            <div
-                                key={note.id}
-                                className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden cursor-pointer"
-                                style={cardStyle(
-                                    note.start_time,
-                                    note.end_time
-                                )}
-                                onClick={() => openViewModal("note", note)}
-                            >
-                                <div className="card-body p-2 sm:p-3">
-                                    <div className="flex items-start justify-between gap-2">
-                                        <div className="min-w-0">
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <span className="text-xs opacity-60">
-                                                    {note.start_time.slice(
-                                                        0,
-                                                        5
-                                                    )}{" "}
-                                                    -{" "}
-                                                    {note.end_time.slice(0, 5)}
-                                                </span>
-                                                <span className="badge badge-outline badge-sm">
-                                                    {noteCategoryLabel(
-                                                        note.category
+                        {noteClusters.map((cluster) => {
+                            const isGroup = cluster.items.length > 1;
+                            const first = cluster.items[0].note;
+                            return (
+                                <div
+                                    key={
+                                        isGroup
+                                            ? `group-${cluster.start}-${cluster.end}`
+                                            : first.id
+                                    }
+                                    className="card absolute left-0 right-0 bg-base-100 border border-base-300 shadow-sm overflow-hidden cursor-pointer"
+                                    style={cardStyleMinutes(
+                                        cluster.start,
+                                        cluster.end
+                                    )}
+                                    onClick={() =>
+                                        openNoteGroup(
+                                            cluster.items.map(
+                                                (item) => item.note
+                                            )
+                                        )
+                                    }
+                                >
+                                    <div className="card-body p-2 sm:p-3">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0">
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <span className="text-xs opacity-60">
+                                                        {formatMinutes(
+                                                            cluster.start
+                                                        )}{" "}
+                                                        -{" "}
+                                                        {formatMinutes(
+                                                            cluster.end
+                                                        )}
+                                                    </span>
+                                                    {isGroup ? (
+                                                        <span className="badge badge-primary badge-sm">
+                                                            {
+                                                                cluster.items
+                                                                    .length
+                                                            }{" "}
+                                                            keterangan
+                                                        </span>
+                                                    ) : (
+                                                        <span className="badge badge-outline badge-sm">
+                                                            {noteCategoryLabel(
+                                                                first.category
+                                                            )}
+                                                        </span>
                                                     )}
-                                                </span>
+                                                </div>
+                                                {isGroup ? (
+                                                    <div className="flex flex-wrap gap-1 mt-1">
+                                                        {cluster.items.map(
+                                                            (item) => (
+                                                                <span
+                                                                    key={
+                                                                        item
+                                                                            .note
+                                                                            .id
+                                                                    }
+                                                                    className="badge badge-ghost badge-xs"
+                                                                >
+                                                                    {noteCategoryLabel(
+                                                                        item
+                                                                            .note
+                                                                            .category
+                                                                    )}
+                                                                </span>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <p className="whitespace-pre-line break-words">
+                                                        {first.notes}
+                                                    </p>
+                                                )}
                                             </div>
-                                            <p className="whitespace-pre-line break-words">
-                                                {note.notes}
-                                            </p>
+                                            {canManage && !isGroup && (
+                                                <div className="flex shrink-0 gap-1">
+                                                    <button
+                                                        className="btn btn-xs btn-success"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            openEditNoteForm(
+                                                                first
+                                                            );
+                                                        }}
+                                                    >
+                                                        <FaEdit />
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-xs btn-error"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            openDeleteNoteModal(
+                                                                first.id
+                                                            );
+                                                        }}
+                                                    >
+                                                        <FaTrash />
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
-                                        {canManage && (
-                                            <div className="flex shrink-0 gap-1">
-                                                <button
-                                                    className="btn btn-xs btn-success"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openEditNoteForm(
-                                                            note
-                                                        );
-                                                    }}
-                                                >
-                                                    <FaEdit />
-                                                </button>
-                                                <button
-                                                    className="btn btn-xs btn-error"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openDeleteNoteModal(
-                                                            note.id
-                                                        );
-                                                    }}
-                                                >
-                                                    <FaTrash />
-                                                </button>
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}
@@ -428,6 +535,15 @@ export default function LogbookDetail({ logbook, copyableLogbooks = [] }) {
                 modalRef={viewModalRef}
                 onClose={closeViewModal}
                 item={viewItem}
+            />
+
+            <NotesGroupModal
+                modalRef={noteGroupModalRef}
+                onClose={closeNoteGroup}
+                notes={noteGroup}
+                canManage={canManage}
+                onEdit={editNoteFromGroup}
+                onDelete={deleteNoteFromGroup}
             />
 
             <DeleteModal
