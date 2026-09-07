@@ -24,6 +24,8 @@ class UserTransmissionController extends Controller
      */
     public function userTransmissions(User $user, Request $request)
     {
+        abort_if($user->hasRole('sdm'), 403, 'Pengguna dengan peran SDM tidak dapat memiliki transmisi.');
+
         $perPage = $request->input('per_page', 10);
         $sortField = $request->sort;
         $sortDirection = $request->direction;
@@ -86,6 +88,8 @@ class UserTransmissionController extends Controller
             'transmission_id' => 'required|min:0',
         ]);
 
+        abort_if(User::findOrFail($request->user_id)->hasRole('sdm'), 403, 'Pengguna dengan peran SDM tidak dapat memiliki transmisi.');
+
         $userTransmission = $this->userTransmissionService->create($request->user_id, $request->transmission_id);
         if (!$userTransmission) {
             return Redirect::back()->with('error', 'Gagal menambah pengguna.');
@@ -99,6 +103,8 @@ class UserTransmissionController extends Controller
      */
     public function userTransmissionsCreate(User $user)
     {
+        abort_if($user->hasRole('sdm'), 403, 'Pengguna dengan peran SDM tidak dapat memiliki transmisi.');
+
         $userSelected = $user;
         $transmissions = $this->userTransmissionService->getTransmissionAvailableForUser($user->id, 0, "name", "ASC");
         if (count($transmissions) < 1) {
@@ -112,6 +118,8 @@ class UserTransmissionController extends Controller
      */
     public function store(User $user, Request $request)
     {
+        abort_if($user->hasRole('sdm'), 403, 'Pengguna dengan peran SDM tidak dapat memiliki transmisi.');
+
         $request->validate([
             'user_id' => 'required|min:0',
             'transmission_id' => 'required|min:0',

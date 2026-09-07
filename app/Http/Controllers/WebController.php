@@ -24,7 +24,7 @@ class WebController extends Controller
         $from = $request->input('from') ?: now()->subDays(29)->format('Y-m-d');
 
         $transmissions = $this->dashboardService->getAccessibleTransmissions($user);
-        $charts = $this->dashboardService->getStats($user, $transmissionIds, $from, $to);
+        $isSdm = $user->hasRole('sdm');
 
         return Inertia::render('Dashboard', [
             'transmissions' => $transmissions,
@@ -33,7 +33,9 @@ class WebController extends Controller
                 'from' => $from,
                 'to' => $to,
             ],
-            'charts' => $charts,
+            'isSdm' => $isSdm,
+            'charts' => $isSdm ? null : $this->dashboardService->getStats($user, $transmissionIds, $from, $to),
+            'scheduleOverview' => $this->dashboardService->getScheduleOverview($user, $transmissionIds, $from, $to),
         ]);
     }
 }

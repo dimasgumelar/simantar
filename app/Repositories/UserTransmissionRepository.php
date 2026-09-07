@@ -51,6 +51,9 @@ class UserTransmissionRepository
                 ->from('user_transmissions')
                 ->where('transmission_id', $transmissionId);
         })
+        ->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'sdm');
+        })
         ->orderBy($sortField, $sortDirection);
 
         if ($perPage > 0) {
@@ -68,7 +71,7 @@ class UserTransmissionRepository
             ->join('transmissions', 'transmissions.id', '=', 'user_transmissions.transmission_id')
             ->join('users', 'users.id', '=', 'user_transmissions.user_id')
             ->where('user_transmissions.transmission_id', $transmissionId)
-            ->select('user_transmissions.*', 'users.name');
+            ->select('user_transmissions.*', 'users.name', 'users.nip');
 
         if ($sortField && in_array($sortField, ['name', 'created_at'])) {
             $query->orderBy($sortField, $sortDirection);

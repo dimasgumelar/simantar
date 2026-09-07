@@ -195,18 +195,23 @@ export default function UsersIndex({ users, roles }) {
                                                         openDeleteModal(user.id)
                                                     }
                                                 />
-                                                <Link
-                                                    href={route(
-                                                        "users.transmissions",
-                                                        user.id
-                                                    )}
-                                                    className="btn btn-sm btn-warning"
-                                                >
-                                                    <FaBroadcastTower />
-                                                    <span className="hidden sm:flex">
-                                                        Transmisi
-                                                    </span>
-                                                </Link>
+                                                {!user.roles.some(
+                                                    (role) =>
+                                                        role.name === "sdm"
+                                                ) && (
+                                                    <Link
+                                                        href={route(
+                                                            "users.transmissions",
+                                                            user.id
+                                                        )}
+                                                        className="btn btn-sm btn-warning"
+                                                    >
+                                                        <FaBroadcastTower />
+                                                        <span className="hidden sm:flex">
+                                                            Transmisi
+                                                        </span>
+                                                    </Link>
+                                                )}
                                             </td>
                                         </tr>
                                     ))

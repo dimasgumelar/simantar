@@ -1,6 +1,12 @@
 import { Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-import { FaHome, FaUser, FaBroadcastTower, FaBook } from "react-icons/fa";
+import {
+    FaHome,
+    FaUser,
+    FaBroadcastTower,
+    FaBook,
+    FaCalendarAlt,
+} from "react-icons/fa";
 import FlashToast from "@/Components/FlashToast";
 
 export default function AuthenticatedLayout({ children }) {
@@ -31,6 +37,19 @@ export default function AuthenticatedLayout({ children }) {
             icon: <FaBook />,
             routeStr: "logbooks.index",
             roles: ["admin", "ketua tim", "teknisi", "operator", "koordinator"],
+        },
+        {
+            label: "Jadwal Dinas",
+            icon: <FaCalendarAlt />,
+            routeStr: "schedules.index",
+            roles: [
+                "admin",
+                "ketua tim",
+                "sdm",
+                "teknisi",
+                "operator",
+                "koordinator",
+            ],
         },
     ];
     const userRoleNames =
@@ -74,7 +93,7 @@ export default function AuthenticatedLayout({ children }) {
             </div>
 
             {/* Content area */}
-            <div className="flex flex-col h-screen bg-base-100 w-full">
+            <div className="flex flex-col h-screen bg-base-100 w-full min-w-0">
                 {/* Sticky Navbar */}
                 <div className="navbar h-16 bg-base-100 shadow-sm">
                     <div className="flex-none">
@@ -215,7 +234,9 @@ export default function AuthenticatedLayout({ children }) {
                 </div>
 
                 {/* Main Content */}
-                <main className="flex-1 overflow-y-auto">{children}</main>
+                <main className="flex-1 min-w-0 overflow-y-auto">
+                    {children}
+                </main>
             </div>
         </div>
     );

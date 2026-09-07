@@ -1,9 +1,8 @@
 import React, { useRef, useState } from "react";
-import { router, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import { FaPlus, FaEdit, FaTrash, FaCopy } from "react-icons/fa";
 import DeleteModal from "@/Components/DeleteModal";
 import Roles from "@/utils/UserFromUsePage";
-import { parseDateTime } from "@/utils/helper-function";
 import EventFormModal from "./EventFormModal";
 import CopyEventsModal from "./CopyEventsModal";
 import NoteFormModal from "./NoteFormModal";
@@ -52,13 +51,9 @@ export default function LogbookDetail({
     copyableLogbooks = [],
     eventNameSuggestions = [],
 }) {
-    const { userFromUsePage, role } = Roles();
+    const { role } = Roles();
 
     const canManage = role.hasOperator || role.hasKoordinator;
-    const hasSigned = logbook.petugas_list.some(
-        (petugas) => petugas.id === userFromUsePage.id
-    );
-    const canSign = canManage && !hasSigned;
 
     const allTimes = [
         ...logbook.events.flatMap((event) => [
@@ -186,14 +181,6 @@ export default function LogbookDetail({
         }
     };
 
-    const handleSign = () => {
-        router.post(
-            route("logbooks.sign", logbook.id),
-            {},
-            { preserveScroll: true }
-        );
-    };
-
     const openCreateNoteForm = () => {
         setFormNote(null);
         setShowNoteForm(true);
@@ -237,55 +224,6 @@ export default function LogbookDetail({
 
     return (
         <>
-            <div className="overflow-x-auto mt-2">
-                <table className="table">
-                    <tbody>
-                        <tr>
-                            <th>Petugas</th>
-                            <td>
-                                <div className="flex flex-col gap-2">
-                                    {logbook.petugas_list.length === 0 ? (
-                                        <span className="text-sm opacity-70">
-                                            Belum ada yang menandatangani.
-                                        </span>
-                                    ) : (
-                                        logbook.petugas_list.map(
-                                            (petugas) => (
-                                                <div
-                                                    key={petugas.id}
-                                                    className="flex items-center gap-2"
-                                                >
-                                                    <span>
-                                                        {petugas.name}
-                                                    </span>
-                                                    <span className="badge badge-outline badge-success">
-                                                        TTD{" "}
-                                                        {parseDateTime(
-                                                            petugas.pivot
-                                                                .signed_at
-                                                        )}
-                                                    </span>
-                                                </div>
-                                            )
-                                        )
-                                    )}
-                                    {canSign && (
-                                        <div>
-                                            <button
-                                                className="btn btn-sm btn-primary"
-                                                onClick={handleSign}
-                                            >
-                                                Tanda Tangani
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
             <div className="grid grid-cols-2 gap-2 sm:gap-4 mt-6">
                 <div className="flex items-center justify-between gap-2">
                     <h2 className="text-lg font-semibold">Acara</h2>

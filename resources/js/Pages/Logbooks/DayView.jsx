@@ -9,6 +9,8 @@ import { inertiaGet, parseDate } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
 import PowerList from "./Partials/PowerList";
+import PetugasList from "./Partials/PetugasList";
+import GuestBookList from "./Partials/GuestBookList";
 
 function todayStr() {
     const date = new Date();
@@ -146,11 +148,18 @@ export default function LogbooksDayView({
                             Anda tidak memiliki akses ke transmisi manapun.
                         </div>
                     ) : logbook ? (
-                        <LogbookDetail
-                            logbook={logbook}
-                            copyableLogbooks={copyableLogbooks}
-                            eventNameSuggestions={eventNameSuggestions}
-                        />
+                        <>
+                            <PetugasList logbook={logbook} />
+                            <GuestBookList
+                                logbook={logbook}
+                                canManage={true}
+                            />
+                            <LogbookDetail
+                                logbook={logbook}
+                                copyableLogbooks={copyableLogbooks}
+                                eventNameSuggestions={eventNameSuggestions}
+                            />
+                        </>
                     ) : (
                         <div className="mt-6 flex flex-col items-center gap-3 py-8 text-center">
                             <p className="opacity-70">

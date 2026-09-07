@@ -7,6 +7,8 @@ import { parseDate } from "@/utils/helper-function";
 import { BreadcrumbsLogbooks } from "@/Pages/Logbooks/Constant";
 import LogbookDetail from "./Partials/LogbookDetail";
 import PowerList from "./Partials/PowerList";
+import PetugasList from "./Partials/PetugasList";
+import GuestBookList from "./Partials/GuestBookList";
 import Roles from "@/utils/UserFromUsePage";
 
 export default function LogbooksShow({
@@ -69,6 +71,10 @@ export default function LogbooksShow({
                             </tbody>
                         </table>
                     </div>
+
+                    <PetugasList logbook={logbook} />
+
+                    <GuestBookList logbook={logbook} canManage={canManage} />
 
                     <LogbookDetail
                         logbook={logbook}

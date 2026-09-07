@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Transmission;
+use App\Repositories\GuestBookRepository;
 use App\Repositories\LogbookEventRepository;
 use App\Repositories\LogbookNoteRepository;
 use App\Repositories\LogbookPowerRepository;
@@ -14,17 +15,20 @@ class LogbookService
     protected $logbookEventRepo;
     protected $logbookNoteRepo;
     protected $logbookPowerRepo;
+    protected $guestBookRepo;
 
     public function __construct(
         LogbookRepository $logbookRepo,
         LogbookEventRepository $logbookEventRepo,
         LogbookNoteRepository $logbookNoteRepo,
-        LogbookPowerRepository $logbookPowerRepo
+        LogbookPowerRepository $logbookPowerRepo,
+        GuestBookRepository $guestBookRepo
     ) {
         $this->logbookRepo = $logbookRepo;
         $this->logbookEventRepo = $logbookEventRepo;
         $this->logbookNoteRepo = $logbookNoteRepo;
         $this->logbookPowerRepo = $logbookPowerRepo;
+        $this->guestBookRepo = $guestBookRepo;
     }
 
     public function getAccessibleTransmissions($user)
@@ -148,6 +152,38 @@ class LogbookService
     public function deletePower($power)
     {
         return $this->logbookPowerRepo->delete($power);
+    }
+
+    public function addGuestBook($logbookId, $name, $institution, $purpose, $phone, $timeIn, $timeOut, $notes)
+    {
+        return $this->guestBookRepo->create([
+            'logbook_id' => $logbookId,
+            'name' => $name,
+            'institution' => $institution,
+            'purpose' => $purpose,
+            'phone' => $phone,
+            'time_in' => $timeIn,
+            'time_out' => $timeOut,
+            'notes' => $notes,
+        ]);
+    }
+
+    public function updateGuestBook($guestBook, $name, $institution, $purpose, $phone, $timeIn, $timeOut, $notes)
+    {
+        return $this->guestBookRepo->update($guestBook, [
+            'name' => $name,
+            'institution' => $institution,
+            'purpose' => $purpose,
+            'phone' => $phone,
+            'time_in' => $timeIn,
+            'time_out' => $timeOut,
+            'notes' => $notes,
+        ]);
+    }
+
+    public function deleteGuestBook($guestBook)
+    {
+        return $this->guestBookRepo->delete($guestBook);
     }
 
     public function getCopyableLogbooks($logbook)

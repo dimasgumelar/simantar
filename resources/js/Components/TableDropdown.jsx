@@ -9,7 +9,7 @@ export default function TableDropdown({
     size = "",
 }) {
     return (
-        <div className="dropdown">
+        <div className="dropdown ml-2">
             <div tabIndex={0} role="button" className={`btn btn-neutral ${size}`}>
                 {icon}
                 <span className="hidden sm:flex">{title}</span>

@@ -50,4 +50,12 @@ class TransmissionService
     {
         return $this->transmissionRepo->delete($transmission);
     }
+
+    public function updateScheduleSettings($transmission, $adminTransmisiId, ?array $shiftCodes)
+    {
+        return $this->transmissionRepo->update($transmission, [
+            'admin_transmisi_id' => $adminTransmisiId,
+            'shift_codes' => $shiftCodes,
+        ]);
+    }
 }

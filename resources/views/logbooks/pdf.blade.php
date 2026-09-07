@@ -177,6 +177,40 @@ function formatTanggalIndo($date, $hariIndo, $bulanIndo)
         </table>
     @endif
 
+    <h2>Buku Tamu</h2>
+    @if ($logbook->guestBooks->isEmpty())
+        <p class="empty">Belum ada data buku tamu.</p>
+    @else
+        <table class="data">
+            <thead>
+                <tr>
+                    <th style="width: 24px;">No</th>
+                    <th>Nama</th>
+                    <th>Instansi / Asal</th>
+                    <th>Keperluan</th>
+                    <th>No. Telepon</th>
+                    <th style="width: 60px;">Jam Masuk</th>
+                    <th style="width: 60px;">Jam Keluar</th>
+                    <th>Catatan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($logbook->guestBooks as $guestBook)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $guestBook->name }}</td>
+                        <td>{{ $guestBook->institution }}</td>
+                        <td>{{ $guestBook->purpose }}</td>
+                        <td>{{ $guestBook->phone }}</td>
+                        <td>{{ $guestBook->time_in ? substr($guestBook->time_in, 0, 5) : '' }}</td>
+                        <td>{{ $guestBook->time_out ? substr($guestBook->time_out, 0, 5) : '' }}</td>
+                        <td>{{ $guestBook->notes }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+
     <div class="footer">
         Dicetak pada {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}
     </div>

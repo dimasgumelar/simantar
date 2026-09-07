@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\DutyScheduleController;
+use App\Http\Controllers\GuestBookController;
 use App\Http\Controllers\LogbookController;
 use App\Http\Controllers\LogbookEventController;
 use App\Http\Controllers\LogbookNoteController;
 use App\Http\Controllers\LogbookPowerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransmissionAdminController;
 use App\Http\Controllers\TransmissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransmissionController;
@@ -84,6 +87,23 @@ Route::middleware(['auth', 'role:operator|koordinator'])->group(function () {
 
     Route::post('/logbooks/{logbook}/powers', [LogbookPowerController::class, 'store'])->name('logbooks.powers.store');
     Route::delete('/logbooks/{logbook}/powers/{power}/delete', [LogbookPowerController::class, 'destroy'])->name('logbooks.powers.destroy');
+
+    Route::post('/logbooks/{logbook}/guest-books', [GuestBookController::class, 'store'])->name('logbooks.guestbooks.store');
+    Route::post('/logbooks/{logbook}/guest-books/{guestBook}', [GuestBookController::class, 'update'])->name('logbooks.guestbooks.update');
+    Route::delete('/logbooks/{logbook}/guest-books/{guestBook}/delete', [GuestBookController::class, 'destroy'])->name('logbooks.guestbooks.destroy');
+});
+
+Route::middleware(['auth', 'role:admin|sdm'])->group(function () {
+    Route::get('/schedules/admin-transmisi/{transmission}/edit', [TransmissionAdminController::class, 'edit'])->name('schedules.admin-transmisi.edit');
+    Route::put('/schedules/admin-transmisi/{transmission}', [TransmissionAdminController::class, 'update'])->name('schedules.admin-transmisi.update');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/schedules', [DutyScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('/schedules/{transmission}', [DutyScheduleController::class, 'show'])->name('schedules.show');
+    Route::post('/schedules/{transmission}', [DutyScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/schedules/{transmission}/csv', [DutyScheduleController::class, 'csv'])->name('schedules.csv');
+    Route::get('/schedules/{transmission}/pdf', [DutyScheduleController::class, 'pdf'])->name('schedules.pdf');
 });
 
 require __DIR__.'/auth.php';

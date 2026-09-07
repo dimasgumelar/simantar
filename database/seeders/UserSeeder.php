@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
         $teknisiRole = Role::firstOrCreate(['name' => 'teknisi']);
         $operatorRole = Role::firstOrCreate(['name' => 'operator']);
         $koordinatorRole = Role::firstOrCreate(['name' => 'koordinator']);
+        $sdmRole = Role::firstOrCreate(['name' => 'sdm']);
 
         // Buat user
         $user = User::create([
@@ -57,7 +58,7 @@ class UserSeeder extends Seeder
                     'name' => $data['NAMA'],
                     'phone' => $data['TELEPON'],
                     'nip' => $data['NIP'],
-                    'password' => Hash::make($data['TELEPON']),
+                    'password' => Hash::make($data['NIP']),
                 ]
             );
 

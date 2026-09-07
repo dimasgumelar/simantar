@@ -36,6 +36,7 @@ class LogbookRepository
             'events' => fn ($query) => $query->orderBy('start_time'),
             'notes' => fn ($query) => $query->orderBy('start_time'),
             'powers' => fn ($query) => $query->orderBy('created_at'),
+            'guestBooks' => fn ($query) => $query->orderBy('created_at'),
         ])->find($id);
     }
 
@@ -47,6 +48,7 @@ class LogbookRepository
             'events' => fn ($query) => $query->orderBy('start_time'),
             'notes' => fn ($query) => $query->orderBy('start_time'),
             'powers' => fn ($query) => $query->orderBy('created_at'),
+            'guestBooks' => fn ($query) => $query->orderBy('created_at'),
         ])
             ->where('transmission_id', $transmissionId)
             ->where('tanggal', $tanggal)

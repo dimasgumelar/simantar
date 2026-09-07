@@ -47,4 +47,9 @@ class Logbook extends Model
     {
         return $this->hasMany(LogbookPower::class);
     }
+
+    public function guestBooks()
+    {
+        return $this->hasMany(GuestBook::class);
+    }
 }

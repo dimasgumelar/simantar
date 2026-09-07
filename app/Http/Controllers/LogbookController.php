@@ -150,6 +150,22 @@ class LogbookController extends Controller
             foreach ($logbook->notes as $index => $note) {
                 fputcsv($handle, [$index + 1, ucfirst($note->category), substr($note->start_time, 0, 5), substr($note->end_time, 0, 5), $note->notes]);
             }
+            fputcsv($handle, []);
+
+            fputcsv($handle, ['Buku Tamu']);
+            fputcsv($handle, ['No', 'Nama', 'Instansi / Asal', 'Keperluan', 'No. Telepon', 'Jam Masuk', 'Jam Keluar', 'Catatan']);
+            foreach ($logbook->guestBooks as $index => $guestBook) {
+                fputcsv($handle, [
+                    $index + 1,
+                    $guestBook->name,
+                    $guestBook->institution,
+                    $guestBook->purpose,
+                    $guestBook->phone,
+                    $guestBook->time_in ? substr($guestBook->time_in, 0, 5) : '',
+                    $guestBook->time_out ? substr($guestBook->time_out, 0, 5) : '',
+                    $guestBook->notes,
+                ]);
+            }
 
             fclose($handle);
         };

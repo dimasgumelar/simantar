@@ -116,6 +116,7 @@ export default function TransmissionUsersIndex({
                                         sortDirection={sortDirection}
                                         onSort={handleSort}
                                     />
+                                    <th>NIP</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -123,7 +124,7 @@ export default function TransmissionUsersIndex({
                                 {transmissionUsers.data.length === 0 ? (
                                     <TableNotFound
                                         message="Tidak ada pengguna transmisi yang ditemukan."
-                                        colspan={3}
+                                        colspan={4}
                                     />
                                 ) : (
                                     transmissionUsers.data.map(
@@ -138,6 +139,9 @@ export default function TransmissionUsersIndex({
                                                 </th>
                                                 <td>
                                                     {transmissionUser.name}
+                                                </td>
+                                                <td>
+                                                    {transmissionUser.nip}
                                                 </td>
                                                 <td className="flex flex-wrap justify-center items-center gap-2">
                                                     <button

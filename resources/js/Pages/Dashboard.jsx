@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import { FaBroadcastTower } from "react-icons/fa";
+import { Head, Link } from "@inertiajs/react";
+import { FaBroadcastTower, FaCalendarAlt } from "react-icons/fa";
 import { BadgeRole } from "@/Components/Badge";
 import Roles from "@/utils/UserFromUsePage";
 import TableDropdown from "@/Components/TableDropdown";
 import { DateInput } from "@/Components/Flatpickr";
 import { inertiaGet } from "@/utils/helper-function";
+import TableNotFound from "@/Components/TableNotFound";
 import DailyActivityChart from "@/Pages/Dashboard/Charts/DailyActivityChart";
 import NoteCategoryChart from "@/Pages/Dashboard/Charts/NoteCategoryChart";
 import PowerTrendChart from "@/Pages/Dashboard/Charts/PowerTrendChart";
 import SignatureStatusChart from "@/Pages/Dashboard/Charts/SignatureStatusChart";
+import GuestBookChart from "@/Pages/Dashboard/Charts/GuestBookChart";
+import GuestBookTrendChart from "@/Pages/Dashboard/Charts/GuestBookTrendChart";
+
+const SCHEDULE_STATUS = {
+    terisi: { label: "Terisi Penuh", className: "badge-success" },
+    sebagian: { label: "Sebagian Terisi", className: "badge-warning" },
+    belum_terisi: { label: "Belum Terisi", className: "badge-error" },
+    tanpa_pegawai: { label: "Belum Ada Pegawai", className: "badge-ghost" },
+};
 
 const PRESETS = [
     { label: "7 Hari", days: 7 },
@@ -28,7 +38,13 @@ function today() {
     return new Date().toISOString().slice(0, 10);
 }
 
-export default function Dashboard({ transmissions = [], filters = {}, charts = {} }) {
+export default function Dashboard({
+    transmissions = [],
+    filters = {},
+    charts = {},
+    scheduleOverview = [],
+    isSdm = false,
+}) {
     const { userFromUsePage } = Roles();
 
     const [selectedTransmissions, setSelectedTransmissions] = useState(
@@ -155,38 +171,165 @@ export default function Dashboard({ transmissions = [], filters = {}, charts = {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-                <div className="card bg-base-100 shadow-sm w-full">
-                    <div className="card-body">
-                        <h3 className="font-semibold">
-                            Jumlah Acara &amp; Keterangan per Hari
-                        </h3>
-                        <DailyActivityChart data={charts.dailyCounts} />
+            {!isSdm && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Jumlah Acara &amp; Keterangan per Hari
+                            </h3>
+                            <DailyActivityChart data={charts.dailyCounts} />
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Distribusi Kategori Keterangan
+                            </h3>
+                            <NoteCategoryChart data={charts.noteCategories} />
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Tren Daya (Power)
+                            </h3>
+                            <PowerTrendChart data={charts.powerTrend} />
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Status Tanda Tangan per Transmisi
+                            </h3>
+                            <SignatureStatusChart
+                                data={charts.signatureStatus}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Jumlah Tamu per Transmisi
+                            </h3>
+                            <GuestBookChart
+                                data={charts.guestBookByTransmission}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="card bg-base-100 shadow-sm w-full">
+                        <div className="card-body">
+                            <h3 className="font-semibold">
+                                Tren Jumlah Tamu per Hari
+                            </h3>
+                            <GuestBookTrendChart data={charts.guestBookTrend} />
+                        </div>
                     </div>
                 </div>
+            )}
 
-                <div className="card bg-base-100 shadow-sm w-full">
-                    <div className="card-body">
-                        <h3 className="font-semibold">
-                            Distribusi Kategori Keterangan
-                        </h3>
-                        <NoteCategoryChart data={charts.noteCategories} />
-                    </div>
-                </div>
+            <div className="card bg-base-100 shadow-sm w-full mt-4">
+                <div className="card-body">
+                    <h3 className="font-semibold">
+                        Status Jadwal Dinas per Transmisi
+                    </h3>
+                    <div className="overflow-x-auto">
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Transmisi</th>
+                                    <th>Admin Transmisi</th>
+                                    <th>Pegawai</th>
+                                    <th>Hari Terisi</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {scheduleOverview.length === 0 ? (
+                                    <TableNotFound
+                                        message="Tidak ada transmisi yang ditemukan."
+                                        colspan={7}
+                                    />
+                                ) : (
+                                    scheduleOverview.map(
+                                        (transmission, index) => {
+                                            const status =
+                                                SCHEDULE_STATUS[
+                                                    transmission.status
+                                                ] ??
+                                                SCHEDULE_STATUS.belum_terisi;
 
-                <div className="card bg-base-100 shadow-sm w-full">
-                    <div className="card-body">
-                        <h3 className="font-semibold">Tren Daya (Power)</h3>
-                        <PowerTrendChart data={charts.powerTrend} />
-                    </div>
-                </div>
-
-                <div className="card bg-base-100 shadow-sm w-full">
-                    <div className="card-body">
-                        <h3 className="font-semibold">
-                            Status Tanda Tangan per Transmisi
-                        </h3>
-                        <SignatureStatusChart data={charts.signatureStatus} />
+                                            return (
+                                                <tr key={transmission.id}>
+                                                    <th>{index + 1}</th>
+                                                    <td>
+                                                        {transmission.name}
+                                                    </td>
+                                                    <td>
+                                                        {transmission.admin_transmisi ?? (
+                                                            <span className="text-base-content/50">
+                                                                Belum
+                                                                ditentukan
+                                                            </span>
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {
+                                                            transmission.employee_count
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        {
+                                                            transmission.filled_days
+                                                        }{" "}
+                                                        /{" "}
+                                                        {
+                                                            transmission.total_days
+                                                        }{" "}
+                                                        hari (
+                                                        {
+                                                            transmission.percent
+                                                        }
+                                                        %)
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            className={`badge badge-outline ${status.className}`}
+                                                        >
+                                                            {status.label}
+                                                        </span>
+                                                    </td>
+                                                    <td className="flex flex-wrap justify-center items-center gap-2">
+                                                        {transmission.can_view && (
+                                                            <Link
+                                                                href={route(
+                                                                    "schedules.show",
+                                                                    transmission.id
+                                                                )}
+                                                                className="btn btn-sm btn-primary"
+                                                            >
+                                                                <FaCalendarAlt />
+                                                                <span className="hidden sm:flex">
+                                                                    Lihat
+                                                                    Jadwal
+                                                                </span>
+                                                            </Link>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
+                                    )
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
