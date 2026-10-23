@@ -13,7 +13,7 @@ import Roles from "@/utils/UserFromUsePage";
 
 export default function LogbooksShow({
     logbook,
-    copyableLogbooks,
+    latestCopyableDate,
     eventNameSuggestions = [],
 }) {
     const { role } = Roles();
@@ -78,7 +78,7 @@ export default function LogbooksShow({
 
                     <LogbookDetail
                         logbook={logbook}
-                        copyableLogbooks={copyableLogbooks}
+                        latestCopyableDate={latestCopyableDate}
                         eventNameSuggestions={eventNameSuggestions}
                     />
 

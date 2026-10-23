@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Head, router } from "@inertiajs/react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Breadcrumbs from "@/Components/Breadcrumbs";
 import { DownloadDropdownButton } from "@/Components/Button";
@@ -12,11 +13,19 @@ import PowerList from "./Partials/PowerList";
 import PetugasList from "./Partials/PetugasList";
 import GuestBookList from "./Partials/GuestBookList";
 
-function todayStr() {
-    const date = new Date();
+function formatDateStr(date) {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function todayStr() {
+    return formatDateStr(new Date());
+}
+
+function shiftDateStr(dateStr, days) {
+    const [year, month, day] = (dateStr || todayStr()).split("-").map(Number);
+    return formatDateStr(new Date(year, month - 1, day + days));
 }
 
 export default function LogbooksDayView({
@@ -24,7 +33,7 @@ export default function LogbooksDayView({
     transmissionId,
     tanggal,
     logbook,
-    copyableLogbooks,
+    latestCopyableDate,
     eventNameSuggestions = [],
 }) {
     const [selectedTransmission, setSelectedTransmission] =
@@ -114,11 +123,45 @@ export default function LogbooksDayView({
                                         Tanggal
                                     </th>
                                     <td>
-                                        <DateInput
-                                            label=""
-                                            value={selectedDate}
-                                            onChange={handleDateChange}
-                                        />
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                type="button"
+                                                className="btn btn-square btn-outline"
+                                                title="Hari sebelumnya"
+                                                onClick={() =>
+                                                    handleDateChange(
+                                                        shiftDateStr(
+                                                            selectedDate,
+                                                            -1
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <FaChevronLeft />
+                                            </button>
+                                            <div className="flex-1">
+                                                <DateInput
+                                                    label=""
+                                                    value={selectedDate}
+                                                    onChange={handleDateChange}
+                                                />
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="btn btn-square btn-outline"
+                                                title="Hari berikutnya"
+                                                onClick={() =>
+                                                    handleDateChange(
+                                                        shiftDateStr(
+                                                            selectedDate,
+                                                            1
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <FaChevronRight />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -156,7 +199,7 @@ export default function LogbooksDayView({
                             />
                             <LogbookDetail
                                 logbook={logbook}
-                                copyableLogbooks={copyableLogbooks}
+                                latestCopyableDate={latestCopyableDate}
                                 eventNameSuggestions={eventNameSuggestions}
                             />
                         </>

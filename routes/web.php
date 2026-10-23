@@ -75,7 +75,8 @@ Route::middleware(['auth', 'role:admin|ketua tim|teknisi|operator|koordinator'])
 Route::middleware(['auth', 'role:operator|koordinator'])->group(function () {
     Route::post('/logbooks', [LogbookController::class, 'store'])->name('logbooks.store');
     Route::post('/logbooks/{logbook}/sign', [LogbookController::class, 'sign'])->name('logbooks.sign');
-    Route::post('/logbooks/{logbook}/copy-events', [LogbookController::class, 'copyEvents'])->name('logbooks.events.copy');
+    Route::get('/logbooks/{logbook}/copy-sources', [LogbookController::class, 'copyableSources'])->name('logbooks.events.copy-sources');
+    Route::post('/logbooks/{logbook}/copy-events',[LogbookController::class, 'copyEvents'])->name('logbooks.events.copy');
 
     Route::post('/logbooks/{logbook}/events', [LogbookEventController::class, 'store'])->name('logbooks.events.store');
     Route::post('/logbooks/{logbook}/events/{event}', [LogbookEventController::class, 'update'])->name('logbooks.events.update');

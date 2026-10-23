@@ -34,7 +34,7 @@ export default function PowerList({ logbook, canManage }) {
                     {logbook.powers.map((power) => (
                         <span
                             key={power.id}
-                            className="badge badge-outline gap-2 py-3"
+                            className="badge badge-outline gap-2 h-auto py-1 whitespace-nowrap"
                         >
                             <span>{power.power} W</span>
                             <span className="text-xs opacity-60">

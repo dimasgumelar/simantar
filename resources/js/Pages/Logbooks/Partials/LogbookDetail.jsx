@@ -48,7 +48,7 @@ function clusterOverlapping(items) {
 
 export default function LogbookDetail({
     logbook,
-    copyableLogbooks = [],
+    latestCopyableDate = null,
     eventNameSuggestions = [],
 }) {
     const { role } = Roles();
@@ -115,6 +115,18 @@ export default function LogbookDetail({
     const closeViewModal = () => {
         viewModalRef.current.close();
         setViewItem(null);
+    };
+
+    const editFromView = (item) => {
+        closeViewModal();
+        if (item.type === "event") openEditForm(item.data);
+        else openEditNoteForm(item.data);
+    };
+
+    const deleteFromView = (item) => {
+        closeViewModal();
+        if (item.type === "event") openDeleteModal(item.data.id);
+        else openDeleteNoteModal(item.data.id);
     };
 
     const [noteGroup, setNoteGroup] = useState([]);
@@ -229,7 +241,7 @@ export default function LogbookDetail({
                     <h2 className="text-lg font-semibold">Acara</h2>
                     {canManage && (
                         <div className="flex flex-wrap justify-end gap-2">
-                            {copyableLogbooks.length > 0 && (
+                            {latestCopyableDate && (
                                 <button
                                     className="btn btn-sm btn-secondary"
                                     onClick={() => setShowCopyForm(true)}
@@ -461,7 +473,7 @@ export default function LogbookDetail({
                     show={showCopyForm}
                     onClose={() => setShowCopyForm(false)}
                     logbookId={logbook.id}
-                    sources={copyableLogbooks}
+                    latestDate={latestCopyableDate}
                 />
             )}
 
@@ -478,6 +490,9 @@ export default function LogbookDetail({
                 modalRef={viewModalRef}
                 onClose={closeViewModal}
                 item={viewItem}
+                canManage={canManage}
+                onEdit={editFromView}
+                onDelete={deleteFromView}
             />
 
             <NotesGroupModal

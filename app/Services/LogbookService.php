@@ -7,6 +7,7 @@ use App\Repositories\LogbookEventRepository;
 use App\Repositories\LogbookNoteRepository;
 use App\Repositories\LogbookPowerRepository;
 use App\Repositories\LogbookRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class LogbookService
@@ -186,9 +187,25 @@ class LogbookService
         return $this->guestBookRepo->delete($guestBook);
     }
 
-    public function getCopyableLogbooks($logbook)
+    public function getCopyableLogbooksInMonth($logbook, $month)
     {
-        return $this->logbookRepo->listOtherForTransmission($logbook->transmission_id, $logbook->id);
+        $start = Carbon::createFromFormat('Y-m-d', $month . '-01')->startOfDay();
+        $end = $start->copy()->endOfMonth();
+
+        return $this->logbookRepo
+            ->listOtherForTransmissionBetween($logbook->transmission_id, $logbook->id, $start->toDateString(), $end->toDateString())
+            ->map(fn ($source) => [
+                'id' => $source->id,
+                'tanggal' => $source->tanggal->format('Y-m-d'),
+            ])
+            ->values();
+    }
+
+    public function getLatestCopyableDate($logbook)
+    {
+        $latest = $this->logbookRepo->latestOtherDateForTransmission($logbook->transmission_id, $logbook->id);
+
+        return $latest ? Carbon::parse($latest)->format('Y-m-d') : null;
     }
 
     public function copyEvents($logbook, $sourceLogbookId)

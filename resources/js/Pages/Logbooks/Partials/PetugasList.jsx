@@ -34,10 +34,10 @@ export default function PetugasList({ logbook }) {
                                     logbook.petugas_list.map((petugas) => (
                                         <div
                                             key={petugas.id}
-                                            className="flex items-center gap-2"
+                                            className="flex flex-wrap items-center gap-2"
                                         >
                                             <span>{petugas.name}</span>
-                                            <span className="badge badge-outline badge-success">
+                                            <span className="badge badge-outline badge-success h-auto py-1 whitespace-nowrap">
                                                 TTD{" "}
                                                 {parseDateTime(
                                                     petugas.pivot.signed_at

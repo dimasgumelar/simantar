@@ -67,13 +67,22 @@ class LogbookRepository
         return Logbook::create($data);
     }
 
-    public function listOtherForTransmission($transmissionId, $excludeLogbookId)
+    public function listOtherForTransmissionBetween($transmissionId, $excludeLogbookId, $startDate, $endDate)
+    {
+        return Logbook::where('transmission_id', $transmissionId)
+            ->where('id', '!=', $excludeLogbookId)
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->whereHas('events')
+            ->orderBy('tanggal')
+            ->get(['id', 'tanggal']);
+    }
+
+    public function latestOtherDateForTransmission($transmissionId, $excludeLogbookId)
     {
         return Logbook::where('transmission_id', $transmissionId)
             ->where('id', '!=', $excludeLogbookId)
             ->whereHas('events')
-            ->orderByDesc('tanggal')
-            ->get(['id', 'tanggal']);
+            ->max('tanggal');
     }
 
     public function addSigner($logbook, $userId)

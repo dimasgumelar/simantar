@@ -63,7 +63,7 @@ class LogbookController extends Controller
             'transmissionId' => $transmissionId,
             'tanggal' => $tanggal,
             'logbook' => $logbook,
-            'copyableLogbooks' => $logbook ? $this->logbookService->getCopyableLogbooks($logbook) : [],
+            'latestCopyableDate' => $logbook ? $this->logbookService->getLatestCopyableDate($logbook) : null,
             'eventNameSuggestions' => $transmissionId ? $this->logbookService->getEventNameSuggestions($transmissionId) : [],
         ]);
     }
@@ -97,7 +97,7 @@ class LogbookController extends Controller
 
         return Inertia::render('Logbooks/Show', [
             'logbook' => $logbook,
-            'copyableLogbooks' => $this->logbookService->getCopyableLogbooks($logbook),
+            'latestCopyableDate' => $this->logbookService->getLatestCopyableDate($logbook),
             'eventNameSuggestions' => $this->logbookService->getEventNameSuggestions($logbook->transmission_id),
         ]);
     }
@@ -181,6 +181,18 @@ class LogbookController extends Controller
         }
 
         return Redirect::back()->with('success', 'Berhasil menandatangani logbook.');
+    }
+
+    public function copyableSources(Logbook $logbook, Request $request)
+    {
+        $request->validate([
+            'month' => 'required|date_format:Y-m',
+        ]);
+
+        $accessibleIds = $this->logbookService->getAccessibleTransmissions($request->user())->pluck('id')->all();
+        abort_unless(in_array($logbook->transmission_id, $accessibleIds), 403);
+
+        return response()->json($this->logbookService->getCopyableLogbooksInMonth($logbook, $request->month));
     }
 
     public function copyEvents(Logbook $logbook, Request $request)

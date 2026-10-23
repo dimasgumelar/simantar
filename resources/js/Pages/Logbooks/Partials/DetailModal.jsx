@@ -1,7 +1,15 @@
 import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { noteCategoryLabel } from "@/Pages/Logbooks/Constant";
 
-export default function DetailModal({ modalRef, onClose, item }) {
+export default function DetailModal({
+    modalRef,
+    onClose,
+    item,
+    canManage,
+    onEdit,
+    onDelete,
+}) {
     return (
         <dialog ref={modalRef} className="modal" id="logbook_detail_modal">
             <div className="modal-box">
@@ -27,6 +35,24 @@ export default function DetailModal({ modalRef, onClose, item }) {
                     </>
                 )}
                 <div className="modal-action">
+                    {canManage && item && (
+                        <>
+                            <button
+                                className="btn btn-success"
+                                onClick={() => onEdit(item)}
+                            >
+                                <FaEdit />
+                                Edit
+                            </button>
+                            <button
+                                className="btn btn-error"
+                                onClick={() => onDelete(item)}
+                            >
+                                <FaTrash />
+                                Hapus
+                            </button>
+                        </>
+                    )}
                     <button onClick={onClose} className="btn">
                         Tutup
                     </button>
