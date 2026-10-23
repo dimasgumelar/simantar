@@ -52,15 +52,15 @@ export default function LogbooksShow({
                         <table className="table">
                             <tbody>
                                 <tr>
-                                    <th>Transmisi</th>
+                                    <th className="w-32 align-middle">Transmisi</th>
                                     <td>{logbook.transmission.name}</td>
                                 </tr>
                                 <tr>
-                                    <th>Tanggal</th>
+                                    <th className="w-32 align-middle">Tanggal</th>
                                     <td>{parseDate(logbook.tanggal)}</td>
                                 </tr>
                                 <tr>
-                                    <th>Power Transmisi</th>
+                                    <th className="w-32 align-middle">Power Transmisi</th>
                                     <td>
                                         <PowerList
                                             logbook={logbook}

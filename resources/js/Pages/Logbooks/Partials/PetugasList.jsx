@@ -23,7 +23,7 @@ export default function PetugasList({ logbook }) {
             <table className="table">
                 <tbody>
                     <tr>
-                        <th>Petugas</th>
+                        <th className="w-32 align-middle">Petugas</th>
                         <td>
                             <div className="flex flex-col gap-2">
                                 {logbook.petugas_list.length === 0 ? (
